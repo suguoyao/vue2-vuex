@@ -10,7 +10,7 @@
                       :key="index"
                       :title="item.new_name"
                       :describeLine="2"
-                      :disableRipple="false"
+                      :disableRipple="true"
                       class="list-item">
           <mu-avatar :src="''" slot="leftAvatar"/>
           <span slot="describe">
