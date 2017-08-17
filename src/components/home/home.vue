@@ -49,19 +49,29 @@
       width: 125%;
       background-color: #fff;
       overflow: hidden;
-      transition: all .3s linear;
+      transition: all .2s linear;
+      height: 70px;
       .list-item {
         width: 80%;
         float: left;
         /*height: 10vh;*/
-        transition: all .3s linear;
+        transition: all .2s linear;
+        .mu-avatar {
+          height: 30px;
+          border-radius: 0;
+          img {
+            border-radius: 0;
+          }
+        }
       }
       .delete {
         width: 20%;
-        height: 10vh;
+        /*height: 10vh;*/
+        height: 100%;
         float: right;
         display: block;
-        line-height: 10vh;
+        /*line-height: 10vh;*/
+        line-height: 70px;
         color: #fff;
         text-align: center;
         background-color: #ff1744;
@@ -84,7 +94,6 @@
       }
     }
   }
-
 </style>
 <script>
   import {mapState, mapGetters, mapMutations} from 'vuex'

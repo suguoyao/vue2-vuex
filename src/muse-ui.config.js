@@ -6,6 +6,7 @@ import appBar from 'muse-components/appBar'
 import avatar from 'muse-components/avatar'
 import badge from 'muse-components/badge'
 import dialog from 'muse-components/dialog'
+import * as card from 'muse-components/card'
 import * as bottomNav from 'muse-components/bottomNav'
 import flatButton from 'muse-components/flatButton'
 import iconButton from 'muse-components/iconButton'
@@ -25,6 +26,7 @@ const components = {
   avatar,
   badge,
   dialog,
+  ...card,
   ...bottomNav,
   flatButton,
   iconButton,

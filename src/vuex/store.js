@@ -24,7 +24,7 @@ let state = {
   // 搜索框
   search: false,
   // 导航栏标题
-  headerTitle: "Message",
+  headerTitle: "查看分组",
   // ajax请求数据是否结束
   isAjax: true,
   // 当前被选中或者在聊天中的friend的_id

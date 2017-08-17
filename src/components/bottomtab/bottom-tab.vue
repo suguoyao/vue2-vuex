@@ -5,19 +5,19 @@
                  class="bottom-tab">
 
     <mu-bottom-nav-item value="home"
-                        title="Home"
-                        icon="chat_bubble_outline"
+                        title="名片夹"
+                        icon="people"
                         :iconClass="[ isActive[0]&&'color-b' ]"
                         :titleClass="[ isActive[0]&&'color-b' ]"/>
 
     <mu-bottom-nav-item value="friends"
-                        title="Friends"
-                        icon="people"
+                        title="会话"
+                        icon="chat_bubble_outline"
                         :iconClass="[ isActive[1]&&'color-b' ]"
                         :titleClass="[ isActive[1]&&'color-b' ]"/>
 
     <mu-bottom-nav-item value="discover"
-                        title="Discover"
+                        title="我"
                         icon="explore"
                         :activeClass="'color-black'"/>
 
