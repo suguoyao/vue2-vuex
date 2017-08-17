@@ -46,7 +46,7 @@ apiRoutes.get('/friends', (req, res) => {
 apiRoutes.get('/getBusinessCard', (req, res) => {
   let response = res;
   let url = 'https://ap4.salesforce.com/services/data/v37.0/query?q=' + encodeURIComponent('SELECT Id, Name, Mobile__c, Company__c FROM Business_Card__c');
-  let sessionId = '00D6F000001v8ld!ARwAQKvnreARqU_1vT2MZf9fVSoJeQ5Vrj70_re5UTyxoV0tcouugLmVzbj_KI5DE1qYpkw598MGP94f72BTwu9oR7nmAO5i';
+  let sessionId = '00D6F000001v8ld!ARwAQBpBeIuwsA0MMEpg6dvGOkCioTOoJsJVDAbpHi_U7g5OEu3vNd2qf0EkuWSy6xmQGYJSxw2epX89HDZ10AZRyjtGguqI';
   superagent.get(url)
     .set('Authorization', 'Bearer ' + sessionId)
     .end((err, res) => {

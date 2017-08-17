@@ -41,7 +41,7 @@ new Vue({
   components: {App},
   // 组件创建前，请求用户数据
   beforeCreate() {
-    this.$store.dispatch('getAllData', this)
+    // this.$store.dispatch('getAllData', this)
     this.$store.dispatch('getSFBusinessCard', this)
   }
 })

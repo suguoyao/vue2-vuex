@@ -2,7 +2,8 @@
   <div>
     <mu-appbar :zDepth="0">
       <!--左边头像-->
-      <mu-avatar slot="left" :src="avatar" :size="35"/>
+      <!--<mu-avatar slot="left" :src="avatar" :size="35"/>-->
+      <mu-icon slot="left" value="camera_alt" color="skyblue"></mu-icon>
 
       <!--标题-->
       <div slot="default" class="title">
@@ -25,7 +26,7 @@
   }
 
   .title {
-    padding-right: 12px;
+    /*padding-right: 12px;*/
     .title-item {
       margin: 0 auto;
       width: 48%;

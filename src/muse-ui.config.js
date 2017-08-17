@@ -7,6 +7,11 @@ import avatar from 'muse-components/avatar'
 import badge from 'muse-components/badge'
 import dialog from 'muse-components/dialog'
 import * as card from 'muse-components/card'
+import * as menu from 'muse-components/menu'
+import iconMenu from 'muse-components/iconMenu'
+import linearProgress from 'muse-components/linearProgress'
+import circularProgress from 'muse-components/circularProgress'
+import refreshControl from 'muse-components/refreshControl'
 import * as bottomNav from 'muse-components/bottomNav'
 import flatButton from 'muse-components/flatButton'
 import iconButton from 'muse-components/iconButton'
@@ -27,6 +32,10 @@ const components = {
   badge,
   dialog,
   ...card,
+  ...menu,
+  iconMenu,
+  circularProgress,
+  refreshControl,
   ...bottomNav,
   flatButton,
   iconButton,

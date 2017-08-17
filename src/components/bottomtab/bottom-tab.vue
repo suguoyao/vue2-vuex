@@ -6,19 +6,19 @@
 
     <mu-bottom-nav-item value="home"
                         title="名片夹"
-                        icon="people"
+                        icon="contacts"
                         :iconClass="[ isActive[0]&&'color-b' ]"
                         :titleClass="[ isActive[0]&&'color-b' ]"/>
 
-    <mu-bottom-nav-item value="friends"
-                        title="会话"
-                        icon="chat_bubble_outline"
-                        :iconClass="[ isActive[1]&&'color-b' ]"
-                        :titleClass="[ isActive[1]&&'color-b' ]"/>
+    <!--<mu-bottom-nav-item value="friends"-->
+                        <!--title="会话"-->
+                        <!--icon="chat_bubble_outline"-->
+                        <!--:iconClass="[ isActive[1]&&'color-b' ]"-->
+                        <!--:titleClass="[ isActive[1]&&'color-b' ]"/>-->
 
     <mu-bottom-nav-item value="discover"
                         title="我"
-                        icon="explore"
+                        icon="person"
                         :activeClass="'color-black'"/>
 
   </mu-bottom-nav>
@@ -48,7 +48,7 @@
         // 路由跳转至当前点击的页面
         this.$router.push(val)
         // 点击更换页面标题
-        this.$store.commit('changeTitle', {title: val})
+//        this.$store.commit('changeTitle', {title: val})
       }
     }
   }

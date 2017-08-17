@@ -24,15 +24,20 @@ const actions = {
   },
   // 测试请求SF接口
   getSFBusinessCard: async ({commit}, that) => {
-    let bc = {};
+    let records = [];
 
-    await that.$http.get('/api/getBusinessCard').then(({data}) => {
-      bc = JSON.parse(data.data);
-    })
+    // await that.$http.get('/api/getBusinessCard').then(({data}) => {
+    //   bc = JSON.parse(data.data);
+    // })
+    let memberid = '9987b011-217b-e711-81ca-0248aae46430';
+    let url = "select new_name,new_mobile,new_email,new_comp,new_dept from new_card where new_memberid='" + memberid + "'"
+    await client.query(url, function (data) {
+      console.log("名片数据", data.value);
+      records = data.value;
+    }, function (error) {
+      console.log(error);
+    });
 
-    console.log('BusinessCard', bc);
-
-    let records = bc.records || [];
     commit('getBCData', {records})
   }
 }

@@ -47,6 +47,7 @@
 
     .container-content {
       width: 100%;
+      /*background-color: #fff;*/
       .patch {
         position: relative;
         width: 100%;

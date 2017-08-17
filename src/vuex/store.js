@@ -61,7 +61,9 @@ let state = {
       _id: 3,
       list: [{_id: 3, message: '请问你要来点兔子吗', time: '3:12'}]
     }
-  ]
+  ],
+  // 名片列表
+  businessCardList: []
 }
 
 // 导出一个新生成的Store对象

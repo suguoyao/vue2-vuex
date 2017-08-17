@@ -1,34 +1,44 @@
 <template>
   <div>
-    <mu-list v-if="!isAjax&&nowMessageList">
-      <div v-for="(item,index) in nowMessageList"
-           :class="[{swipeleft:isSwipe[index]},'wrap']"
-           ref="child"
-           :key="index">
-        <mu-list-item :title="item.friend.name"
+    <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh"/>
+    <div style="margin-top: 30px;text-align: center" v-if="isAjax">
+      <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"/>
+    </div>
+    <mu-list v-if="!isAjax&&businessCardList">
+      <div>
+        <mu-list-item v-for="(item,index) in businessCardList"
+                      :key="index"
+                      :title="item.new_name"
                       :describeLine="2"
-                      :disableRipple="true"
+                      :disableRipple="false"
                       class="list-item">
-          <mu-avatar :src="item.friend.avatar" slot="leftAvatar"/>
+          <mu-avatar :src="''" slot="leftAvatar"/>
           <span slot="describe">
-        <span style="color: rgba(0, 0, 0, .87)">{{item.list[item.list.length - 1].message}}</span>
+        <span style="color: rgba(0, 0, 0, .87)">{{item.new_comp}}</span>
         </span>
 
           <!--时间与待处理-->
-          <div class="item-right"
+          <!--<div class="item-right"
                slot="right">
-            <!--获取到当前聊天队列，最后一条内容的time-->
+            &lt;!&ndash;获取到当前聊天队列，最后一条内容的time&ndash;&gt;
             <span class="time">{{item.list[item.list.length - 1].time}}</span>
-            <!--数据条数-->
-            <!--数据需求是为字符串-->
+            &lt;!&ndash;数据条数&ndash;&gt;
+            &lt;!&ndash;数据需求是为字符串&ndash;&gt;
             <mu-badge :content="`${item.list.length}`" color="orange"/>
-          </div>
+          </div>-->
+
+          <mu-icon-menu slot="right" icon="more_vert" tooltip="操作">
+            <mu-menu-item title="电话"/>
+            <mu-menu-item title="同步联系人"/>
+            <mu-menu-item title="分组"/>
+            <mu-menu-item title="删除"/>
+          </mu-icon-menu>
         </mu-list-item>
 
         <!--阻止时间冒泡-->
-        <div class="delete"
-             @click.stop="removeMsg(item._id)">删除
-        </div>
+        <!--<div class="delete"-->
+        <!--@click.stop="removeMsg(item._id)">删除-->
+        <!--</div>-->
       </div>
     </mu-list>
 
@@ -41,58 +51,32 @@
 </template>
 <style lang="scss">
   .mu-list {
+    position: relative;
     overflow: hidden;
-    .swipeleft {
-      transform: translateX(-20%);
-    }
-    .wrap {
-      width: 125%;
-      background-color: #fff;
-      overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    user-select: none;
+    .list-item {
+      width: 100%;
+      float: left;
+      /*height: 10vh;*/
       transition: all .2s linear;
-      height: 70px;
-      .list-item {
-        width: 80%;
-        float: left;
-        /*height: 10vh;*/
-        transition: all .2s linear;
-        .mu-avatar {
-          height: 30px;
+      background-color: #fff;
+      .mu-avatar {
+        height: 30px;
+        border-radius: 0 !important;
+        img {
           border-radius: 0;
-          img {
-            border-radius: 0;
-          }
-        }
-      }
-      .delete {
-        width: 20%;
-        /*height: 10vh;*/
-        height: 100%;
-        float: right;
-        display: block;
-        /*line-height: 10vh;*/
-        line-height: 70px;
-        color: #fff;
-        text-align: center;
-        background-color: #ff1744;
-      }
-      .item-right {
-        position: relative;
-        .time {
-          position: absolute;
-          display: inline-block;
-          top: -10px;
-          left: -16px;
-        }
-        .mu-badge {
-          display: inline-block;
-          position: absolute;
-          top: 0;
-          left: -10px;
-          border-radius: 5px;
         }
       }
     }
+  }
+
+  .mu-refresh-control {
+    color: #474a4f !important;
+  }
+
+  .mu-circle-spinner {
+    border-color: #474a4f !important;
   }
 </style>
 <script>
@@ -104,16 +88,26 @@
     name: 'message',
     data() {
       return {
-        isSwipe: [false, false, false],
-        delDialog: false
+        delDialog: false,
+        refreshing: false,
+        trigger: null
       }
     },
     computed: {
       ...mapGetters(['nowMessageList']),
-      ...mapState(['isAjax'])
+      ...mapState(['isAjax', 'businessCardList'])
+    },
+    mounted() {
+      this.trigger = this.$el
     },
     methods: {
       ...mapMutations(['removeMessage']),
+      refresh() {
+        this.refreshing = true
+        setTimeout(() => {
+          this.refreshing = false
+        }, 2000)
+      },
       closeDel() {
         this.delDialog = false
       },
@@ -125,44 +119,10 @@
       }
     },
     created() {
-      setTimeout(() => {
-        // 判断是否存在信息列表
-        if (this.$refs.child) {
-          this.$refs.child.forEach((el, index) => {
-            let x, y, X, Y, swipeX, swipeY
-            // 监听触摸事件
-            el.addEventListener('touchstart', e => {
-              x = e.changedTouches[0].pageX
-              y = e.changedTouches[0].pageY
-              swipeX = true
-              swipeY = true
-              this.isSwipe = [false, false, false]
-            })
+//      this.$store.dispatch('getAllData', this).then(() => {
+//        console.log('getAllData success');
+//      })
 
-            el.addEventListener('touchmove', e => {
-              X = event.changedTouches[0].pageX
-              Y = event.changedTouches[0].pageY
-              if (swipeX && Math.abs(X - x) - Math.abs(Y - y) > 0) {
-                // 阻止默认事件
-                e.stopPropagation()
-                // 右滑
-                if (X - x > 10) {
-                  e.preventDefault()
-                  this.isSwipe.splice(index, 1, false)
-                }
-                if (x - X > 10) {
-                  e.preventDefault()
-                  this.isSwipe.splice(index, 1, true)
-                }
-                swipeY = false
-              }
-              if (swipeY && Math.abs(X - x) - Math.abs(Y - y) < 0) {
-                swipeX = false
-              }
-            })
-          })
-        }
-      }, 1000);
     }
   }
 </script>
