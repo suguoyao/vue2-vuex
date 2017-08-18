@@ -1,12 +1,44 @@
 <template>
-  <div>
+  <div style="padding-top: 10vh;">
+    <div class="top-bar">
+      <mu-appbar :zDepth="0">
+        <!--左边头像-->
+        <!--<mu-avatar slot="left" :src="avatar" :size="35"/>-->
+        <mu-icon slot="left" value="camera_alt" color="skyblue"></mu-icon>
+
+        <!--标题-->
+        <div slot="default" class="title">
+          <!--<div class="title-item">-->
+          <!--{{headerTitle}}-->
+          <!--</div>-->
+          <mu-dropDown-menu :value="group"
+                            @change="handleChange"
+                            :autoWidth="true"
+                            labelClass="group"
+                            underlineClass="group-underline">
+            <mu-menu-item value="1" title="全部"/>
+            <mu-menu-item value="2" title="最近30天查看"/>
+            <mu-menu-item value="3" title="最近新增名片"/>
+            <mu-menu-item value="4" title="未分组"/>
+            <mu-menu-item value="5" title="客户"/>
+            <mu-menu-item value="6" title="合作伙伴"/>
+          </mu-dropDown-menu>
+        </div>
+
+
+        <!--右边搜索Icon-->
+        <mu-icon slot="right" value="search" @click="goSearch"></mu-icon>
+
+      </mu-appbar>
+    </div>
+
     <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh"/>
-    <div style="margin-top: 30px;text-align: center" v-if="isAjax">
+    <div style="margin-top: 50%;text-align: center" v-if="isAjax">
       <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"/>
     </div>
     <mu-list v-if="!isAjax&&businessCardList">
       <div>
-        <mu-list-item v-for="(item,index) in businessCardList"
+        <!--<mu-list-item v-for="(item,index) in businessCardList"
                       :key="index"
                       :title="item.new_name"
                       :describeLine="2"
@@ -17,28 +49,18 @@
         <span style="color: rgba(0, 0, 0, .87)">{{item.new_comp}}</span>
         </span>
 
-          <!--时间与待处理-->
-          <!--<div class="item-right"
-               slot="right">
-            &lt;!&ndash;获取到当前聊天队列，最后一条内容的time&ndash;&gt;
-            <span class="time">{{item.list[item.list.length - 1].time}}</span>
-            &lt;!&ndash;数据条数&ndash;&gt;
-            &lt;!&ndash;数据需求是为字符串&ndash;&gt;
-            <mu-badge :content="`${item.list.length}`" color="orange"/>
-          </div>-->
-
           <mu-icon-menu slot="right" icon="more_vert" tooltip="操作">
             <mu-menu-item title="电话"/>
             <mu-menu-item title="同步联系人"/>
             <mu-menu-item title="分组"/>
             <mu-menu-item title="删除"/>
           </mu-icon-menu>
-        </mu-list-item>
+        </mu-list-item>-->
+        <business-card v-for="(item,index) in businessCardList"
+                       :key="index"
+                       :item="item">
+        </business-card>
 
-        <!--阻止时间冒泡-->
-        <!--<div class="delete"-->
-        <!--@click.stop="removeMsg(item._id)">删除-->
-        <!--</div>-->
       </div>
     </mu-list>
 
@@ -78,19 +100,55 @@
   .mu-circle-spinner {
     border-color: #474a4f !important;
   }
+
+  .top-bar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
+  }
+
+  .title {
+    /*padding-right: 12px;*/
+    text-align: center;
+    .title-item {
+      margin: 0 auto;
+      width: 48%;
+      height: 34px;
+      line-height: 30px;
+      text-align: center;
+      border: 1px solid #f4f4f6;
+      border-radius: 4px;
+      font-weight: 500;
+      /*background: #fff;*/
+      color: #fff;
+    }
+  }
+
+  .group {
+    color: #fff !important;
+  }
+
+  .group-underline {
+    background-color: transparent !important;
+  }
 </style>
 <script>
   import {mapState, mapGetters, mapMutations} from 'vuex'
-  // 后续会将滑动封装至子组件
-  //  import swipeDelete from './swipeDelete'
+  import businessCard from '../common/businesscard'
 
   export default {
     name: 'message',
+    components: {
+      businessCard
+    },
     data() {
       return {
         delDialog: false,
         refreshing: false,
-        trigger: null
+        trigger: null,
+        group: '1'
       }
     },
     computed: {
@@ -101,12 +159,19 @@
       this.trigger = this.$el
     },
     methods: {
-      ...mapMutations(['removeMessage']),
+      ...mapMutations(['removeMessage', 'showSearch']),
       refresh() {
         this.refreshing = true
         setTimeout(() => {
           this.refreshing = false
         }, 2000)
+      },
+      handleChange(value) {
+        this.group = value
+      },
+      goSearch() {
+        this.showSearch();
+        this.$router.push('search')
       },
       closeDel() {
         this.delDialog = false

@@ -9,6 +9,7 @@ import dialog from 'muse-components/dialog'
 import * as card from 'muse-components/card'
 import * as menu from 'muse-components/menu'
 import iconMenu from 'muse-components/iconMenu'
+import dropDownMenu from 'muse-components/dropDownMenu'
 import linearProgress from 'muse-components/linearProgress'
 import circularProgress from 'muse-components/circularProgress'
 import refreshControl from 'muse-components/refreshControl'
@@ -34,6 +35,7 @@ const components = {
   ...card,
   ...menu,
   iconMenu,
+  dropDownMenu,
   circularProgress,
   refreshControl,
   ...bottomNav,

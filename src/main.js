@@ -10,6 +10,9 @@ import MuseUi from './muse-ui.config'
 
 // museui carbon主题
 import 'muse-ui/dist/theme-carbon.css'
+// import 'muse-ui/dist/theme-light.css'
+// import 'muse-ui/dist/theme-dark.css'
+// import 'muse-ui/dist/theme-teal.css'
 import './common/css/base.css'
 
 Vue.use(MuseUi)
@@ -31,6 +34,16 @@ Vue.prototype.$http = axios
 router.replace('home')
 
 Vue.config.productionTip = false
+
+router.beforeEach((to, from, next) => {
+  if (from.name == 'search') {
+    store.state.search = false
+  }
+  if(to.name == 'search'){
+    store.state.search = true
+  }
+  next()
+})
 
 /* eslint-disable no-new */
 new Vue({

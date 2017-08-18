@@ -4,12 +4,14 @@ import Router from 'vue-router'
 Vue.use(Router)
 // 导入组件
 import home from '../components/home/home.vue'
-import friends from '../components/friends/friends.vue'
+import search from '../components/search/search.vue'
+import details from '../components/details/details.vue'
 import discover from '../components/discover/discover.vue'
 
 let routes = [
   {path: '/home', name: 'home', component: home},
-  {path: '/friends', name: 'friends', component: friends},
+  {path: '/search', name: 'search', component: search},
+  {path: '/details', name: 'details', component: details},
   {path: '/discover', name: 'discover', component: discover}
 ]
 

@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <!--头部-->
-    <div class="container-top">
-      <top-nav></top-nav>
-    </div>
+    <!--<div class="container-top">-->
+      <!--<top-nav></top-nav>-->
+    <!--</div>-->
 
     <!--内容-->
     <div class="container-content">
-      <div class="patch"></div>
+      <!--<div class="patch"></div>-->
       <router-view></router-view>
       <div class="patch"></div>
     </div>
@@ -61,7 +61,8 @@
       bottom: 0;
       z-index: 1;
       width: 100%;
-      height: 10%;
+      /*height: 10%;*/
+      overflow: hidden;
       .tab {
         /*background-color: #fff;*/
       }

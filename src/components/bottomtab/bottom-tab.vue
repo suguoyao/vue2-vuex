@@ -2,7 +2,8 @@
   <mu-bottom-nav :value="bottomNav"
                  shift
                  @change="handleChange"
-                 class="bottom-tab">
+                 class="bottom-tab"
+                 v-if="!search">
 
     <mu-bottom-nav-item value="home"
                         title="名片夹"
@@ -11,10 +12,10 @@
                         :titleClass="[ isActive[0]&&'color-b' ]"/>
 
     <!--<mu-bottom-nav-item value="friends"-->
-                        <!--title="会话"-->
-                        <!--icon="chat_bubble_outline"-->
-                        <!--:iconClass="[ isActive[1]&&'color-b' ]"-->
-                        <!--:titleClass="[ isActive[1]&&'color-b' ]"/>-->
+    <!--title="会话"-->
+    <!--icon="chat_bubble_outline"-->
+    <!--:iconClass="[ isActive[1]&&'color-b' ]"-->
+    <!--:titleClass="[ isActive[1]&&'color-b' ]"/>-->
 
     <mu-bottom-nav-item value="discover"
                         title="我"
@@ -25,6 +26,8 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex'
+
   export default {
     name: 'bottomTab',
     data() {
@@ -33,6 +36,7 @@
       }
     },
     computed: {
+      ...mapState(['search']),
       // 关于样式设置完全可以用覆盖的形式，这里只是没事找事罢了
       isActive() {
         let arr = ['home', 'friends', 'discover']
@@ -56,10 +60,10 @@
 
 <style lang="scss" scoped>
   .bottom-tab {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*width: 100%;*/
+    /*height: 100%;*/
   }
 </style>

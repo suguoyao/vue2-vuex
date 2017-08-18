@@ -14,7 +14,7 @@
 
 
       <!--右边搜索Icon-->
-      <mu-icon slot="right" value="search"></mu-icon>
+      <mu-icon slot="right" value="search" @click="showSearch"></mu-icon>
 
     </mu-appbar>
   </div>
@@ -50,6 +50,11 @@
     computed: mapState({
       avatar: state => state.data.self.avatar,
       headerTitle: 'headerTitle'
-    })
+    }),
+    methods:{
+      showSearch(){
+        this.$router.push('search')
+      }
+    }
   }
 </script>
