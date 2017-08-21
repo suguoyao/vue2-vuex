@@ -11,10 +11,12 @@ import * as menu from 'muse-components/menu'
 import iconMenu from 'muse-components/iconMenu'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import linearProgress from 'muse-components/linearProgress'
+import * as gridList from 'muse-components/gridList'
 import circularProgress from 'muse-components/circularProgress'
 import refreshControl from 'muse-components/refreshControl'
 import * as bottomNav from 'muse-components/bottomNav'
 import flatButton from 'muse-components/flatButton'
+import floatButton from 'muse-components/floatButton'
 import iconButton from 'muse-components/iconButton'
 import chip from 'muse-components/chip'
 import drawer from 'muse-components/drawer'
@@ -36,10 +38,12 @@ const components = {
   ...menu,
   iconMenu,
   dropDownMenu,
+  ...gridList,
   circularProgress,
   refreshControl,
   ...bottomNav,
   flatButton,
+  floatButton,
   iconButton,
   chip,
   drawer,

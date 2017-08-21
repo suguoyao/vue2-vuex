@@ -12,17 +12,15 @@ Vue.use(Vuex)
 
 // 初始化一些常用数据，根据vue的理念，使用到的数据都必须先进行初始化设置。
 let state = {
-  // 对话框
-  dialog: false,
   // 侧边栏
   sidebar: {
     open: false,
     docked: true
   },
-  // 用户主页
-  personindex: false,
-  // 搜索框
+  // 搜索
   search: false,
+  // 名片详情
+  details: false,
   // 导航栏标题
   headerTitle: "查看分组",
   // ajax请求数据是否结束

@@ -10,8 +10,8 @@
                      slot="default"
                      hintText="搜索"
                      v-model="keyword"
-                     underlineFocusClass="underline"
-                     inputClass="search-input"/>
+                     :underlineFocusClass="'search-underline'"
+                     :inputClass="'search-input'"/>
       <mu-icon-button icon="search"
                       slot="right"
                       @click="search"/>
@@ -27,12 +27,13 @@
   </div>
 </template>
 <style>
-  .underline {
+  .search-underline {
     background-color: orange !important;
   }
 
   .search-input {
     color: #fff !important;
+    line-height: 1;
   }
 </style>
 <script>

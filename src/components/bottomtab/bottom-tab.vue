@@ -1,26 +1,17 @@
 <template>
-  <mu-bottom-nav :value="bottomNav"
+  <mu-bottom-nav :value="$route.name"
                  shift
                  @change="handleChange"
                  class="bottom-tab"
-                 v-if="!search">
+                 v-if="$route.name=='home'||$route.name=='discover'">
 
     <mu-bottom-nav-item value="home"
                         title="名片夹"
-                        icon="contacts"
-                        :iconClass="[ isActive[0]&&'color-b' ]"
-                        :titleClass="[ isActive[0]&&'color-b' ]"/>
-
-    <!--<mu-bottom-nav-item value="friends"-->
-    <!--title="会话"-->
-    <!--icon="chat_bubble_outline"-->
-    <!--:iconClass="[ isActive[1]&&'color-b' ]"-->
-    <!--:titleClass="[ isActive[1]&&'color-b' ]"/>-->
+                        icon="contacts"/>
 
     <mu-bottom-nav-item value="discover"
                         title="我"
-                        icon="person"
-                        :activeClass="'color-black'"/>
+                        icon="person"/>
 
   </mu-bottom-nav>
 </template>
@@ -36,23 +27,15 @@
       }
     },
     computed: {
-      ...mapState(['search']),
-      // 关于样式设置完全可以用覆盖的形式，这里只是没事找事罢了
-      isActive() {
-        let arr = ['home', 'friends', 'discover']
-        let x = []
-        x[arr.indexOf(this.bottomNav)] = true
-        return x
-      }
+      ...mapState(['search', 'details'])
     },
     methods: {
       // 点击按钮
       handleChange(val) {
+        console.log(this.currPage);
         this.bottomNav = val
         // 路由跳转至当前点击的页面
         this.$router.push(val)
-        // 点击更换页面标题
-//        this.$store.commit('changeTitle', {title: val})
       }
     }
   }

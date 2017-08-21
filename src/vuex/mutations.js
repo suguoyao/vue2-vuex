@@ -15,6 +15,10 @@ const mutations = {
   getActiveId: (state, {activeId}) => {
     state.activeId = activeId
   },
+  // 查看详情
+  viewDetail: (state) => {
+    state.details = !state.details
+  },
   // 删除消息队列中的消息
   removeMessage: (state, {_id}) => {
     state.messageList.forEach((item, index, arr) => {

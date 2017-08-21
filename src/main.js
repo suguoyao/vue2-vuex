@@ -31,7 +31,7 @@ FastClick.attach(document.body)
 
 Vue.prototype.$http = axios
 
-router.replace('home')
+// router.replace('home')
 
 Vue.config.productionTip = false
 
@@ -39,8 +39,14 @@ router.beforeEach((to, from, next) => {
   if (from.name == 'search') {
     store.state.search = false
   }
-  if(to.name == 'search'){
+  if (from.name == 'details') {
+    store.state.details = false
+  }
+  if (to.name == 'search') {
     store.state.search = true
+  }
+  if (to.name == 'details') {
+    store.state.details = true
   }
   next()
 })

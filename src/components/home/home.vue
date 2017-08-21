@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-top: 10vh;">
+  <div class="bc-box">
     <div class="top-bar">
       <mu-appbar :zDepth="0">
         <!--左边头像-->
@@ -32,7 +32,7 @@
       </mu-appbar>
     </div>
 
-    <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh"/>
+    <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh()"/>
     <div style="margin-top: 50%;text-align: center" v-if="isAjax">
       <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"/>
     </div>
@@ -69,9 +69,18 @@
       <mu-flat-button slot="actions" @click="closeDel" default label="取消"/>
       <mu-flat-button slot="actions" primary @click="closeDel" label="确定"/>
     </mu-dialog>
+
+    <!--<div class="container-bottom">-->
+      <!--<bottom-tab class="tab"></bottom-tab>-->
+    <!--</div>-->
   </div>
 </template>
 <style lang="scss">
+  .bc-box {
+    position: relative;
+    padding-top: 10vh;
+  }
+
   .mu-list {
     position: relative;
     overflow: hidden;
@@ -137,11 +146,14 @@
 <script>
   import {mapState, mapGetters, mapMutations} from 'vuex'
   import businessCard from '../common/businesscard'
+  import bottomTab from '../../components/bottomtab/bottom-tab'
+
 
   export default {
     name: 'message',
     components: {
-      businessCard
+      businessCard,
+      bottomTab
     },
     data() {
       return {
@@ -178,9 +190,6 @@
       },
       showDel() {
         this.delDialog = true
-      },
-      removeMsg(_id) {
-        this.removeMessage({_id})
       }
     },
     created() {
