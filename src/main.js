@@ -8,6 +8,9 @@ import router from './router'
 import store from './vuex/store'
 import MuseUi from './muse-ui.config'
 
+// import 'mint-ui/lib/style.css'
+// import MintUi from './mint-ui.config'
+
 // museui carbon主题
 import 'muse-ui/dist/theme-carbon.css'
 // import 'muse-ui/dist/theme-light.css'
@@ -16,6 +19,7 @@ import 'muse-ui/dist/theme-carbon.css'
 import './common/css/base.css'
 
 Vue.use(MuseUi)
+Vue.use(MintUi)
 
 import VueLazyload from 'vue-lazyload'
 

@@ -28,7 +28,16 @@ let state = {
   // 当前被选中或者在查看中的名片
   activeId: 0,
   // 名片列表
-  businessCardList: []
+  businessCardList: [],
+  // 名片首字母列表
+  bcFirstNameList: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+  // 名片分组
+  groupList: [
+    '最近30天查看',
+    '合作伙伴',
+    '最近新增名片',
+    '未分组'
+  ]
 }
 
 // 导出一个新生成的Store对象

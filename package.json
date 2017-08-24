@@ -15,7 +15,9 @@
   "dependencies": {
     "axios": "^0.16.2",
     "fastclick": "^1.0.6",
+    "mint-ui": "^2.2.9",
     "muse-ui": "^2.0.3",
+    "pinyin": "^2.8.3",
     "superagent": "^3.5.2",
     "vue": "^2.2.6",
     "vue-lazyload": "^1.0.6",

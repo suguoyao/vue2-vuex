@@ -19,13 +19,9 @@ const mutations = {
   viewDetail: (state) => {
     state.details = !state.details
   },
-  // 删除消息队列中的消息
-  removeMessage: (state, {_id}) => {
-    state.messageList.forEach((item, index, arr) => {
-      if (item._id === _id) {
-        arr.splice(index, 1)
-      }
-    })
+  // 添加分组
+  addGroup: (state, {groupName}) => {
+    state.groupList.push(groupName)
   },
   // 测试获取sf名片数据
   getBCData: (state, {records}) => {

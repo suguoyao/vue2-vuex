@@ -37,26 +37,10 @@
       <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"/>
     </div>
     <mu-list v-if="!isAjax&&businessCardList">
-      <div>
-        <!--<mu-list-item v-for="(item,index) in businessCardList"
-                      :key="index"
-                      :title="item.new_name"
-                      :describeLine="2"
-                      :disableRipple="true"
-                      class="list-item">
-          <mu-avatar :src="''" slot="leftAvatar"/>
-          <span slot="describe">
-        <span style="color: rgba(0, 0, 0, .87)">{{item.new_comp}}</span>
-        </span>
+      <div v-for="(value,key) in bcsSortList">
 
-          <mu-icon-menu slot="right" icon="more_vert" tooltip="操作">
-            <mu-menu-item title="电话"/>
-            <mu-menu-item title="同步联系人"/>
-            <mu-menu-item title="分组"/>
-            <mu-menu-item title="删除"/>
-          </mu-icon-menu>
-        </mu-list-item>-->
-        <business-card v-for="(item,index) in businessCardList"
+        <mu-sub-header>{{key}}</mu-sub-header>
+        <business-card v-for="(item,index) in value"
                        :key="index"
                        :item="item">
         </business-card>
@@ -164,7 +148,7 @@
       }
     },
     computed: {
-      ...mapGetters(['nowMessageList']),
+      ...mapGetters(['nowMessageList','bcsSortList']),
       ...mapState(['isAjax', 'businessCardList'])
     },
     mounted() {
