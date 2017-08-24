@@ -1,17 +1,18 @@
-# 基于Vue+Vuex+MuseUI开发的单页面应用模板
+# 基于Vue+Vuex+MuseUI开发的名片夹应用模板
 
 > 持续更新中...
 
 ## 技术栈
 
-*  vue-cli
-*  vue2
-*  vue-router
-*  vuex
-*  axios
-*  scss
-*  webpack2
-*  muse-ui
+*  vue-cli: 快速构建vue单页应用的脚手架
+*  vue2: 基础框架
+*  vue-router: 路由框架
+*  vuex: 全局数据管理
+*  axios: 基于Promise的http库，可用来请求数据
+*  es6: 使用了es6新特性，提高代码质量，简化书写方式
+*  scss: 强大的 CSS 扩展语言，最终编译成css
+*  webpack2: 模块打包工具
+*  muse-ui: UI框架
 
 ## Build Setup
 
