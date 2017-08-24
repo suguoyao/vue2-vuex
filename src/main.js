@@ -19,7 +19,7 @@ import 'muse-ui/dist/theme-carbon.css'
 import './common/css/base.css'
 
 Vue.use(MuseUi)
-Vue.use(MintUi)
+// Vue.use(MintUi)
 
 import VueLazyload from 'vue-lazyload'
 
