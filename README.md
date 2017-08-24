@@ -17,6 +17,9 @@
 ## Build Setup
 
 ``` bash
+# clone项目到本地
+git clone https://github.com/526878729/vue2-vuex.git
+
 # 安装依赖
 npm install
 
