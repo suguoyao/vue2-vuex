@@ -18,23 +18,23 @@
 ``` bash
 .
 ├── README.md
-├── build
-├── config
-├── dist
-├── index.html
-├── mockdata.json
-├── node_modules
-├── package.json
+├── build                   // 构建服务和webpack配置
+├── config                  // 项目不同环境的配置
+├── dist                    // 项目build打包后生成的目录
+├── index.html              // 项目入口html文件
+├── mockdata.json           // 用于存放一些模拟json数据
+├── node_modules            // 含所有依赖包的文件夹
+├── package.json            // 项目依赖包配置文件
 ├── src
-│   ├── App.vue
-│   ├── assets
-│   ├── common
-│   ├── components
-│   ├── main.js
-│   ├── muse-ui.config.js
-│   ├── router
-│   └── vuex
-├── static
+│   ├── App.vue             // 模板文件入口
+│   ├── assets              //
+│   ├── common              // 公用文件
+│   ├── components          // 各种组件
+│   ├── main.js             // webpack预编译入口
+│   ├── muse-ui.config.js   // museui框架单组件加载配置文件
+│   ├── router              // 路由配置文件
+│   └── vuex                // vuex全局状态管理文件夹
+├── static                  // 存放静态资源文件如css,js,img
 │   ├── css
 │   ├── images
 │   └── js
