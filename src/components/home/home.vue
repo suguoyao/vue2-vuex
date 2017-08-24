@@ -39,7 +39,7 @@
     <mu-list v-if="!isAjax&&businessCardList">
       <div v-for="(value,key) in bcsSortList">
 
-        <mu-sub-header>{{key}}</mu-sub-header>
+        <mu-sub-header :ref="`key_${key}`">{{key}}</mu-sub-header>
         <business-card v-for="(item,index) in value"
                        :key="index"
                        :item="item">
@@ -55,14 +55,36 @@
     </mu-dialog>
 
     <!--<div class="container-bottom">-->
-      <!--<bottom-tab class="tab"></bottom-tab>-->
+    <!--<bottom-tab class="tab"></bottom-tab>-->
     <!--</div>-->
+
+    <!--检索-->
+    <div class="initial-bar">
+      <span @click.stop="toPs(i)" v-for="i in bcInitialList">{{i}}</span>
+    </div>
   </div>
 </template>
 <style lang="scss">
   .bc-box {
     position: relative;
     padding-top: 10vh;
+  }
+
+  .initial-bar {
+    position: fixed;
+    top: 50%;
+    font-size: 11px;
+    line-height: 1.2;
+    right: 8px;
+    width: 10px;
+    -webkit-transform: translate3d(0, -50%, 0);
+    transform: translate3d(0, -50%, 0);
+    span {
+      display: block;
+      text-align: left;
+      font-size: 12px;
+      font-weight: bold;
+    }
   }
 
   .mu-list {
@@ -148,7 +170,7 @@
       }
     },
     computed: {
-      ...mapGetters(['nowMessageList','bcsSortList']),
+      ...mapGetters(['nowMessageList', 'bcInitialList', 'bcsSortList']),
       ...mapState(['isAjax', 'businessCardList'])
     },
     mounted() {
@@ -174,6 +196,9 @@
       },
       showDel() {
         this.delDialog = true
+      },
+      toPs(i) {
+        window.scrollTo(0, this.$refs['key_' + i][0].offsetTop)
       }
     },
     created() {
