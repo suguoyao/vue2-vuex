@@ -14,6 +14,34 @@
 *  webpack2: 模块打包工具
 *  muse-ui: UI框架
 
+## 项目结构
+``` bash
+.
+├── README.md
+├── build
+├── config
+├── dist
+├── index.html
+├── mockdata.json
+├── node_modules
+├── package.json
+├── src
+│   ├── App.vue
+│   ├── assets
+│   ├── common
+│   ├── components
+│   ├── main.js
+│   ├── muse-ui.config.js
+│   ├── router
+│   └── vuex
+├── static
+│   ├── css
+│   ├── images
+│   └── js
+└── test
+```
+
+
 ## Build Setup
 
 ``` bash
