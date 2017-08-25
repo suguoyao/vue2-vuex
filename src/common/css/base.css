@@ -3,19 +3,3 @@ html, body {
   font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light';
   background-color: #f4f4f6;
 }
-
-.color-black {
-  color: #000;
-}
-
-.color-lightblack {
-  color: rgba(0, 0, 0, .54);
-}
-
-.color-white {
-  color: #fff;
-}
-
-.color-active {
-  color: #2e2c6b;
-}

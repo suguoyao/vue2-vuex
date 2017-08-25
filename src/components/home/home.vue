@@ -32,59 +32,111 @@
       </mu-appbar>
     </div>
 
-    <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh()"/>
+    <!--<mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh()"/>-->
     <div style="margin-top: 50%;text-align: center" v-if="isAjax">
       <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"/>
     </div>
-    <mu-list v-if="!isAjax&&businessCardList">
-      <div v-for="(value,key) in bcsSortList">
 
-        <mu-sub-header :ref="`key_${key}`">{{key}}</mu-sub-header>
-        <business-card v-for="(item,index) in value"
-                       :key="index"
-                       :item="item">
-        </business-card>
+    <div>
+      <mu-list v-if="!isAjax&&businessCardList">
+        <ul id="list" ref="content">
+          <li v-for="(value,key) in bcsSortList" class="sort-item">
+            <div :id="key" class="sort-head" :ref="`key_${key}`">
+              <mu-sub-header>{{key}}</mu-sub-header>
+            </div>
+            <business-card v-for="(item,index) in value"
+                           :key="index"
+                           :item="item">
+            </business-card>
+          </li>
+        </ul>
 
-      </div>
-    </mu-list>
+        <!--检索-->
+        <div class="initial-bar" :style="{'height':barHeight+'px'}" ref="nav" @touchstart="handleTouchStart">
+          <ul class="initial-inner">
+            <li class="initial-item" @click.stop="toPs(i)" v-for="i in bcInitialList">{{i}}</li>
+          </ul>
+        </div>
+      </mu-list>
+
+      <div class="indicator" v-show="moving">{{ currentIndicator }}</div>
+    </div>
 
     <mu-dialog :open="delDialog" title="提示" @close="closeDel">
       确定删除此条信息吗？
       <mu-flat-button slot="actions" @click="closeDel" default label="取消"/>
       <mu-flat-button slot="actions" primary @click="closeDel" label="确定"/>
     </mu-dialog>
-
-    <!--<div class="container-bottom">-->
-    <!--<bottom-tab class="tab"></bottom-tab>-->
-    <!--</div>-->
-
-    <!--检索-->
-    <div class="initial-bar">
-      <span @click.stop="toPs(i)" v-for="i in bcInitialList">{{i}}</span>
-    </div>
   </div>
 </template>
 <style lang="scss">
   .bc-box {
     position: relative;
-    padding-top: 10vh;
+    /*padding-top: 10vh;*/
+    padding-top: 56px;
   }
 
   .initial-bar {
     position: fixed;
-    top: 50%;
+    /*top: 50%;*/
+    top: 56px;
+    right: 0;
+    bottom: 0;
     font-size: 11px;
     line-height: 1.2;
-    right: 8px;
-    width: 10px;
-    -webkit-transform: translate3d(0, -50%, 0);
-    transform: translate3d(0, -50%, 0);
-    span {
+    /*right: 8px;*/
+    width: 13px;
+    background-color: #474a4f;
+    max-height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    /*-webkit-transform: translate3d(0, -50%, 0);*/
+    /*transform: translate3d(0, -50%, 0);*/
+    z-index: 999;
+    .initial-inner {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      margin: 0;
+      max-height: 100%;
+    }
+    li {
       display: block;
-      text-align: left;
       font-size: 12px;
       font-weight: bold;
+      color: #fff;
+      text-align: center;
+      margin: 3px auto;
     }
+  }
+
+  .indicator {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+    line-height: 50px;
+    background-color: rgba(0, 0, 0, .7);
+    border-radius: 5px;
+    color: #fff;
+    font-size: 22px;
+    z-index: 10000;
   }
 
   .mu-list {
@@ -92,6 +144,7 @@
     overflow: hidden;
     -webkit-overflow-scrolling: touch;
     user-select: none;
+    margin-right: 13px;
     .list-item {
       width: 100%;
       float: left;
@@ -166,15 +219,21 @@
         delDialog: false,
         refreshing: false,
         trigger: null,
-        group: '1'
+        group: '1',
+        barHeight: document.documentElement.clientHeight - 112,
+        sections: [],
+        indicatorTime: null,
+        moving: false,
+        firstSection: null,
+        currentIndicator: '',
+        navOffsetX: 0
       }
     },
     computed: {
       ...mapGetters(['nowMessageList', 'bcInitialList', 'bcsSortList']),
       ...mapState(['isAjax', 'businessCardList'])
     },
-    mounted() {
-      this.trigger = this.$el
+    created() {
     },
     methods: {
       ...mapMutations(['removeMessage', 'showSearch']),
@@ -199,13 +258,60 @@
       },
       toPs(i) {
         window.scrollTo(0, this.$refs['key_' + i][0].offsetTop)
+      },
+      handleTouchStart(e) {
+        let listItems = this.$refs.content.getElementsByTagName('li');
+        if (listItems.length > 0) {
+          this.firstSection = listItems[0];
+        }
+        this.sections = listItems;
+
+        if (e.target.tagName !== 'LI') {
+          return;
+        }
+        this.navOffsetX = e.changedTouches[0].clientX;
+        this.scrollList(e.changedTouches[0].clientY);
+        if (this.indicatorTime) {
+          clearTimeout(this.indicatorTime);
+        }
+        this.moving = true;
+        window.addEventListener('touchmove', this.handleTouchMove);
+        window.addEventListener('touchend', this.handleTouchEnd);
+      },
+      handleTouchMove(e) {
+        e.preventDefault();
+        this.scrollList(e.changedTouches[0].clientY);
+      },
+      handleTouchEnd() {
+        this.indicatorTime = setTimeout(() => {
+          this.moving = false;
+          this.currentIndicator = '';
+        }, 500);
+        window.removeEventListener('touchmove', this.handleTouchMove);
+        window.removeEventListener('touchend', this.handleTouchEnd);
+      },
+      scrollList(y) {
+        let currentItem = document.elementFromPoint(this.navOffsetX, y);
+        if (!currentItem || !currentItem.classList.contains('initial-item')) {
+          return;
+        }
+        this.currentIndicator = currentItem.innerText;
+        let targets = [];
+        for (let i = 0; i < this.sections.length; i++) {
+          if (this.sections[i].firstChild.innerText.trim() === currentItem.innerText) {
+            targets.push(this.sections[i])
+          }
+        }
+        let targetDOM;
+
+        if (targets.length > 0) {
+          targetDOM = targets[0];
+          window.scrollTo(0, document.getElementById(currentItem.innerText).offsetTop)
+        }
       }
     },
-    created() {
-//      this.$store.dispatch('getAllData', this).then(() => {
-//        console.log('getAllData success');
-//      })
-
+    mounted() {
+      this.trigger = this.$el
     }
   }
 </script>

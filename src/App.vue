@@ -2,7 +2,7 @@
   <div id="app">
     <!--头部-->
     <!--<div class="container-top">-->
-      <!--<top-nav></top-nav>-->
+    <!--<top-nav></top-nav>-->
     <!--</div>-->
 
     <!--内容-->
@@ -67,5 +67,11 @@
         /*background-color: #fff;*/
       }
     }
+  }
+
+  ul, ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
 </style>
