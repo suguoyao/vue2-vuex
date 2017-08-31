@@ -17,13 +17,23 @@
                       @click="search"/>
     </mu-appbar>
 
-    <mu-list>
+    <div style="margin-top: 50%;text-align: center" v-if="isAjax">
+      <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"></mu-circular-progress>
+    </div>
+
+    <mu-list v-if="!isAjax">
       <mu-sub-header>{{searchInfo}}</mu-sub-header>
-      <div v-for="(item,index) in results">
+      <div v-for="(item,index) in getCardBySearch">
         <business-card :key="index" :item="item">
         </business-card>
       </div>
     </mu-list>
+
+    <mu-dialog :open="delDialog" title="提示" @close="closeDel">
+      确定删除此名片吗？
+      <mu-flat-button slot="actions" @click="closeDel" default label="取消"/>
+      <mu-flat-button slot="actions" primary @click="del" label="确定"/>
+    </mu-dialog>
   </div>
 </template>
 <style>
@@ -37,7 +47,7 @@
   }
 </style>
 <script>
-  import {mapState, mapMutations} from 'vuex'
+  import {mapState, mapGetters, mapMutations} from 'vuex'
   import businessCard from '../common/businesscard'
 
   export default {
@@ -45,14 +55,16 @@
       return {
         searchInfo: '在输入框中，输入关键词搜索相关名片',
         keyword: '',
-        results: []
+        results: [],
+        delDialog: false
       }
     },
     components: {
       businessCard
     },
     computed: {
-      ...mapState(['businessCardList'])
+      ...mapState(['businessCardList', 'isAjax']),
+      ...mapGetters(['getCardBySearch'])
     },
     methods: {
       ...mapMutations(['showSearch']),
@@ -63,14 +75,22 @@
       search() {
         let kw = this.keyword
         if (kw.length > 0) {
-          this.businessCardList.filter(item => {
-            if (item.new_name !== null && item.new_name.indexOf(kw) > -1) {
-              this.results.push(item)
-            }
-          })
-          this.searchInfo = '共找到' + this.results.length + '条记录'
+          this.$store.commit('getSearchKeyword', {keyword: kw})
+          this.searchInfo = '共找到' + this.getCardBySearch.length + '条记录'
         }
-      }
+      },
+      closeDel() {
+        this.delDialog = false
+      },
+      showDel(id) {
+        this.cId = id
+        this.delDialog = true
+      },
+      del() {
+        console.log(this.cId);
+        this.$store.commit('delCardItem', {id: this.cId})
+        this.delDialog = false
+      },
     }
   }
 </script>

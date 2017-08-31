@@ -12,6 +12,10 @@ Vue.use(Vuex)
 
 // 初始化一些常用数据，根据vue的理念，使用到的数据都必须先进行初始化设置。
 let state = {
+  // toast
+  toast: false,
+  toastMsg: '',
+  toastTimer: null,
   // 侧边栏
   sidebar: {
     open: false,
@@ -19,7 +23,10 @@ let state = {
   },
   // 搜索
   search: false,
-  // 名片详情
+  searchKeyword: '',
+  // 是否正在识别名片
+  isScan: false,
+  // 详情页
   details: false,
   // 导航栏标题
   headerTitle: "查看分组",
@@ -29,15 +36,18 @@ let state = {
   activeId: 0,
   // 名片列表
   businessCardList: [],
+  // 名片详情信息
+  cardDetails: {},
+  // 名片识别结果
+  scanResult: {},
+  compayBusinessData: [],
   // 名片首字母列表
-  bcFirstNameList: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+  // bcFirstNameList: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
   // 名片分组
-  groupList: [
-    '最近30天查看',
-    '合作伙伴',
-    '最近新增名片',
-    '未分组'
-  ]
+  groupList: [],
+  // 当前选择分组
+  currGroup: '全部',
+  currGroupId: 0
 }
 
 // 导出一个新生成的Store对象

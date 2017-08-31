@@ -13,11 +13,12 @@
     </mu-list-item>
 
     <div class="card-menu">
-      <mu-icon-menu slot="right" icon="more_vert" tooltip="操作">
-        <mu-menu-item title="电话"/>
-        <mu-menu-item title="同步联系人"/>
-        <mu-menu-item title="分组"/>
-        <mu-menu-item title="删除"/>
+      <mu-icon-menu v-show="!isAjax" slot="right" icon="more_vert" tooltip="操作">
+        <!--<mu-menu-item title="电话" tag :href="item.new_mobile?'tel:'+item.new_mobile:'javascript:;'"></mu-menu-item>-->
+        <mu-menu-item title="电话" @click="callTel(item.new_mobile)"></mu-menu-item>
+        <!--<mu-menu-item title="同步联系人"></mu-menu-item>-->
+        <!--<mu-menu-item title="分组"></mu-menu-item>-->
+        <mu-menu-item title="删除" @click.stop="del(item.new_cardid)"></mu-menu-item>
       </mu-icon-menu>
     </div>
 
@@ -48,7 +49,7 @@
 </style>
 
 <script>
-  import {mapMutations} from 'vuex'
+  import {mapState, mapMutations} from 'vuex'
 
   export default {
     name: 'businessCard',
@@ -61,12 +62,25 @@
     data() {
       return {}
     },
+    computed: {
+      ...mapState(['isAjax'])
+    },
     methods: {
       ...mapMutations(['getActiveId', 'viewDetail']),
       showDetails(id) {
         this.viewDetail()
         this.getActiveId({activeId: id})
         this.$router.push({path: 'details', query: {id: id}})
+      },
+      callTel(phone) {
+        if (phone && phone.length > 0) {
+          window.location.href = "tel:" + phone
+        } else {
+          this.$store.commit('showToast', {msg: '请先为此名片填写电话'})
+        }
+      },
+      del(id) {
+        this.$parent.$parent.showDel(id)
       }
     }
   }

@@ -4,25 +4,19 @@
       <mu-appbar :zDepth="0">
         <!--左边头像-->
         <!--<mu-avatar slot="left" :src="avatar" :size="35"/>-->
-        <mu-icon slot="left" value="camera_alt" color="skyblue"></mu-icon>
+        <mu-flat-button slot="left" icon="linked_camera">
+          <scan></scan>
+        </mu-flat-button>
+        <!--<mu-icon slot="left" value="camera_alt" color="skyblue">-->
+        <!--<input type="file">-->
+        <!--</mu-icon>-->
 
         <!--标题-->
         <div slot="default" class="title">
           <!--<div class="title-item">-->
           <!--{{headerTitle}}-->
           <!--</div>-->
-          <mu-dropDown-menu :value="group"
-                            @change="handleChange"
-                            :autoWidth="true"
-                            labelClass="group"
-                            underlineClass="group-underline">
-            <mu-menu-item value="1" title="全部"/>
-            <mu-menu-item value="2" title="最近30天查看"/>
-            <mu-menu-item value="3" title="最近新增名片"/>
-            <mu-menu-item value="4" title="未分组"/>
-            <mu-menu-item value="5" title="客户"/>
-            <mu-menu-item value="6" title="合作伙伴"/>
-          </mu-dropDown-menu>
+          <mu-flat-button :label="currGroup" class="demo-flat-button" @click="showGroup"></mu-flat-button>
         </div>
 
 
@@ -31,16 +25,17 @@
 
       </mu-appbar>
     </div>
+    <mu-linear-progress color="blue" v-show="isScan"></mu-linear-progress>
 
     <!--<mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh()"/>-->
-    <div style="margin-top: 50%;text-align: center" v-if="isAjax">
-      <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"/>
+    <div class="home-loading" v-if="isAjax">
+      <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"></mu-circular-progress>
     </div>
 
     <div>
-      <mu-list v-if="!isAjax&&businessCardList">
+      <mu-list v-if="businessCardList">
         <ul id="list" ref="content">
-          <li v-for="(value,key) in bcsSortList" class="sort-item">
+          <li v-for="(value,key) in getCardsByGroup" class="sort-item">
             <div :id="key" class="sort-head" :ref="`key_${key}`">
               <mu-sub-header>{{key}}</mu-sub-header>
             </div>
@@ -51,25 +46,90 @@
           </li>
         </ul>
 
-        <!--检索-->
-        <div class="initial-bar" :style="{'height':barHeight+'px'}" ref="nav" @touchstart="handleTouchStart">
-          <ul class="initial-inner">
-            <li class="initial-item" @click.stop="toPs(i)" v-for="i in bcInitialList">{{i}}</li>
-          </ul>
-        </div>
       </mu-list>
 
+      <mu-content-block v-if="Object.keys(getCardsByGroup).length>0"
+                        style="margin-top:20px;text-align: center"
+                        @click.native="goTop">
+        共有
+        <mu-badge :content="'' + getCardsCount"/>
+        张名片
+      </mu-content-block>
+
       <div class="indicator" v-show="moving">{{ currentIndicator }}</div>
+
+      <!--无名片时显示-->
+      <div class="nocard" v-if="Object.keys(getCardsByGroup).length==0&&!isAjax">
+        <mu-icon value="recent_actors" :size="80" color="#ccc"></mu-icon>
+        <mu-content-block :style="{'margin-bottom':'20px'}">您还没有名片，赶紧扫一张吧~</mu-content-block>
+      </div>
+    </div>
+
+    <!--检索-->
+    <div v-if="businessCardList.length>0" class="initial-bar" :style="{'height':'100%'}" ref="nav"
+         @touchstart="handleTouchStart">
+      <ul class="initial-inner">
+        <li class="initial-item" @click.stop="toPs(i)" v-for="i in bcInitialList">{{i}}</li>
+      </ul>
     </div>
 
     <mu-dialog :open="delDialog" title="提示" @close="closeDel">
-      确定删除此条信息吗？
+      确定删除此名片吗？
       <mu-flat-button slot="actions" @click="closeDel" default label="取消"/>
-      <mu-flat-button slot="actions" primary @click="closeDel" label="确定"/>
+      <mu-flat-button slot="actions" primary @click="del" label="确定"/>
+    </mu-dialog>
+
+
+    <mu-dialog :open="groupDialog"
+               @close="closeGroup"
+               title="选择分组"
+               dialogClass="result-dialog"
+               bodyClass="result-dialog-body"
+               :scrollable="true">
+      <mu-menu>
+        <mu-menu-item title="全部" :disableFocusRipple="true" @click="selectGroup('全部')"></mu-menu-item>
+        <mu-menu-item v-for="(item,index) in groupList"
+                      :title="item.new_name"
+                      :key="index"
+                      :disableFocusRipple="true"
+                      @click="selectGroup(item)">
+
+        </mu-menu-item>
+      </mu-menu>
+      <mu-flat-button default label="关闭" @click="closeGroup" slot="actions"></mu-flat-button>
     </mu-dialog>
   </div>
 </template>
 <style lang="scss">
+  .result-dialog-body {
+    max-height: 279px !important;
+    padding: 0 !important;
+    .mu-menu-item-wrapper {
+      height: auto !important;
+    }
+    .mu-menu {
+      width: 100% !important;
+    }
+    .mu-menu-list {
+      width: 100% !important;
+    }
+    .mu-menu-item-title {
+      white-space: normal !important;
+    }
+  }
+
+  .home-loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }
+
   .bc-box {
     position: relative;
     /*padding-top: 10vh;*/
@@ -177,6 +237,11 @@
     z-index: 100;
   }
 
+  .nocard {
+    text-align: center;
+    margin-top: 40%;
+  }
+
   .title {
     /*padding-right: 12px;*/
     text-align: center;
@@ -205,6 +270,7 @@
 <script>
   import {mapState, mapGetters, mapMutations} from 'vuex'
   import businessCard from '../common/businesscard'
+  import scan from '../home/scan'
   import bottomTab from '../../components/bottomtab/bottom-tab'
 
 
@@ -212,31 +278,33 @@
     name: 'message',
     components: {
       businessCard,
+      scan,
       bottomTab
     },
     data() {
       return {
         delDialog: false,
+        groupDialog: false,
         refreshing: false,
         trigger: null,
-        group: '1',
         barHeight: document.documentElement.clientHeight - 112,
         sections: [],
         indicatorTime: null,
         moving: false,
         firstSection: null,
         currentIndicator: '',
-        navOffsetX: 0
+        navOffsetX: 0,
+        cId: 0
       }
     },
     computed: {
-      ...mapGetters(['nowMessageList', 'bcInitialList', 'bcsSortList']),
-      ...mapState(['isAjax', 'businessCardList'])
+      ...mapGetters(['bcInitialList', 'bcsSortList', 'getCardsByGroup', 'getCardsCount']),
+      ...mapState(['isAjax', 'isScan', 'businessCardList', 'groupList', 'currGroup'])
     },
     created() {
     },
     methods: {
-      ...mapMutations(['removeMessage', 'showSearch']),
+      ...mapMutations(['showSearch']),
       refresh() {
         this.refreshing = true
         setTimeout(() => {
@@ -250,11 +318,32 @@
         this.showSearch();
         this.$router.push('search')
       },
+      showGroup() {
+        this.groupDialog = true
+      },
+      closeGroup() {
+        this.groupDialog = false
+      },
+      selectGroup(item) {
+        if (item == '全部') {
+          this.$store.commit('getCurrGroup', {group: item, id: 0})
+        } else {
+          this.$store.commit('getCurrGroup', {group: item.new_name, id: item.new_groupid})
+        }
+        this.groupDialog = false
+      },
       closeDel() {
         this.delDialog = false
       },
-      showDel() {
+      showDel(id) {
+        this.cId = id
         this.delDialog = true
+      },
+      del() {
+        console.log(this.cId);
+        this.$store.state.isAjax = true
+        this.$store.dispatch('delCard', {id: this.cId})
+        this.delDialog = false
       },
       toPs(i) {
         window.scrollTo(0, this.$refs['key_' + i][0].offsetTop)
@@ -308,6 +397,9 @@
           targetDOM = targets[0];
           window.scrollTo(0, document.getElementById(currentItem.innerText).offsetTop)
         }
+      },
+      goTop() {
+        window.scrollTo(0, document.body.offsetTop)
       }
     },
     mounted() {

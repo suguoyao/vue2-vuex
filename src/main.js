@@ -6,6 +6,7 @@ import App from './App'
 import FastClick from 'fastclick'
 import router from './router'
 import store from './vuex/store'
+// import iconfont from 'material-design-icons/iconfont'
 import MuseUi from './muse-ui.config'
 
 // import 'mint-ui/lib/style.css'
@@ -19,7 +20,6 @@ import 'muse-ui/dist/theme-carbon.css'
 import './common/css/base.css'
 
 Vue.use(MuseUi)
-// Vue.use(MintUi)
 
 import VueLazyload from 'vue-lazyload'
 
@@ -64,7 +64,6 @@ new Vue({
   components: {App},
   // 组件创建前，请求用户数据
   beforeCreate() {
-    // this.$store.dispatch('getAllData', this)
     this.$store.dispatch('getSFBusinessCard', this)
   }
 })

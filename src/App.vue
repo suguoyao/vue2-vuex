@@ -12,6 +12,8 @@
       <div class="patch"></div>
     </div>
 
+    <mu-toast v-if="toast" :message="toastMsg"></mu-toast>
+
     <!--底部tabs-->
     <div class="container-bottom">
       <bottom-tab class="tab"></bottom-tab>
@@ -30,11 +32,18 @@
     components: {
       topNav,
       bottomTab
+    },
+    computed: {
+      ...mapState(['toast', 'toastMsg'])
     }
   }
 </script>
 
 <style lang="scss">
+  html, body {
+
+  }
+
   #app {
     .container-top {
       position: fixed;
@@ -66,6 +75,17 @@
       .tab {
         /*background-color: #fff;*/
       }
+    }
+
+    .mu-toast {
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      -moz-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+      -o-transform: translateX(-50%);
+      transform: translateX(-50%);
+      bottom: 15%;
+      width: auto !important;
     }
   }
 
