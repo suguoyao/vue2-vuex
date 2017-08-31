@@ -33,25 +33,26 @@
       },
       imgPreview(file) {
 //        this.scanCard(file)
-
         let self = this;
-        let Orientation;
+        /*let Orientation;
         //去获取拍照时的信息，解决拍出来的照片旋转问题
         Exif.getData(file, function () {
           Orientation = Exif.getTag(this, 'Orientation');
-        });
+        });*/
+
         // 看支持不支持FileReader
         if (!file || !window.FileReader) return;
+
         if (/^image/.test(file.type)) {
           // 创建一个reader
           let reader = new FileReader();
           // 将图片2将转成 base64 格式
           reader.readAsDataURL(file);
           // 读取成功后的回调
-          reader.onloadend = async function () {
-            let result = this.result;
-            let img = new Image();
-            img.src = result;
+          reader.onload = function () {
+//            let result = this.result;
+//            let img = new Image();
+//            img.src = result;
 
             //判断图片是否小于100K,是就直接上传，反之压缩图片
             if (this.result.length <= (100 * 1024)) {
@@ -59,12 +60,12 @@
 //              self.scanCard(file)
               self.$store.dispatch('getScanResult', {file: file, that: this})
             } else {
-              img.onload = function () {
-                let data = self.compress(img, Orientation);
+//              img.onload = function () {
+//                let data = self.compress(img, Orientation);
                 //console.log('data2', data);
 //                self.scanCard(file)
-                self.$store.dispatch('getScanResult', {file: file, that: this})
-              }
+//              }
+              self.$store.dispatch('getScanResult', {file: file, that: this})
             }
           }
         }
