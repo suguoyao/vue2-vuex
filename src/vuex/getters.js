@@ -146,7 +146,31 @@ const getters = {
       }
     })
 
+    // if (oldData._new_group_value) {
+    //   newData._new_group_value = oldData._new_group_value
+    // }
+
     return newData
+  },
+  // 获取当前查看名片的分组名
+  getCardDetailGroupName: (state) => {
+    let details = state.scanResult
+    let glist = state.groupList
+    let gname = ''
+
+    console.log('getters', details);
+    if (details._new_group_value == null || details._new_group_value == 'undefined') {
+      return '未分组'
+    }
+
+    for (let i = 0; i < glist.length; i++) {
+      if (glist[i].new_groupid == details._new_group_value) {
+        gname = glist[i].new_name;
+        break;
+      }
+    }
+
+    return gname
   },
   // 获取工商信息标题
   getBSTitle: (state, getters) => {

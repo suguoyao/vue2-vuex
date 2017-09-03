@@ -22,14 +22,14 @@ export default {
   new_operatescopeandform: "经营(业务)范围及方式",
   //icon
   new_name: "名字-person-text",
+  new_comp: "公司-domain-text",
   new_mobile: "手机-phone_iphone-number",
   new_tel: "电话-call-tel",
-  new_post: "邮编-markunread_mailbox-number",
-  new_web: "网址-web-text",
-  new_fax: "传真-local_printshop-text",
   new_email: "邮箱-email-email",
   new_dept: "职位-perm_contact_calendar-text",
-  new_comp: "公司-domain-text",
   new_addr: "地址-place-text",
+  new_web: "网址-web-text",
+  new_fax: "传真-local_printshop-text",
+  new_post: "邮编-markunread_mailbox-number",
   // new_title: "图片地址"
 }

@@ -42,6 +42,7 @@ Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
   if (from.name == 'search') {
     store.state.search = false
+    store.state.searchResult = []
   }
   if (from.name == 'details') {
     store.state.details = false
@@ -64,7 +65,7 @@ new Vue({
   components: {App},
   // 组件创建前，请求用户数据
   beforeCreate() {
-    this.$store.dispatch('getSFBusinessCard', this)
+
   }
 })
 

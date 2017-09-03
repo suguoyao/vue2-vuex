@@ -6,11 +6,8 @@
           <mu-grid-tile titlePosition="bottom" actionPosition="right" :rows="2" :cols="2">
             <img :src="'./static/images/sugars.jpeg'"/>
             <!--<img :src="scanResult.new_title"/>-->
-            <span slot="title">分组</span>
-            <span slot="subTitle"><b>全部</b></span>
-            <!--<mu-flat-button v-show="!saving" label="保存" labelClass="flat-label"-->
-            <!--icon="border_color" slot="action"-->
-            <!--@click="saveInfo()"></mu-flat-button>-->
+            <span slot="title">当前分组</span>
+            <span slot="subTitle"><b>{{getCardDetailGroupName}}</b></span>
             <mu-flat-button v-show="!saving" :label="isEdit?'保存':'编辑'" :labelClass="'flat-label'"
                             :icon="isEdit?'assignment_turned_in':'border_color'" slot="action"
                             @click="isEdit?saveInfo():editInfo()"></mu-flat-button>
@@ -52,10 +49,10 @@
         </mu-list-item>
       </div>
 
-      <div class="options">
+      <div class="options" v-show="isEdit">
         <mu-tabs>
           <!--<mu-tab value="tab1" icon="contact_phone" title="同步联系人"></mu-tab>-->
-          <!--<mu-tab value="tab2" icon="group_add" title="分组"></mu-tab>-->
+          <mu-tab value="tab2" icon="group_add" title="选择分组" @click="showGroup"></mu-tab>
           <!--<mu-tab value="tab3" icon="contacts" title="存入通讯录"></mu-tab>-->
         </mu-tabs>
       </div>
@@ -65,6 +62,7 @@
       <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"></mu-circular-progress>
     </div>
 
+    <!--保存确认弹窗-->
     <mu-dialog :open="dialog"
                @close="closeDialog"
                title="确认信息"
@@ -72,15 +70,34 @@
                bodyClass="result-dialog-body"
                :scrollable="true">
       <mu-menu>
+        <mu-menu-item :title="'分组: '+getCardDetailGroupName" :disableFocusRipple="true"></mu-menu-item>
         <mu-menu-item v-for="(val,key) in getDetailsTitle"
                       :title="BSKEY[key].split('-')[0]+': ' + val"
                       :key="key"
                       :disableFocusRipple="true">
-
         </mu-menu-item>
       </mu-menu>
       <mu-flat-button primary label="确定并保存" @click="save" slot="actions"></mu-flat-button>
       <mu-flat-button default label="取消" @click="closeDialog" slot="actions"></mu-flat-button>
+    </mu-dialog>
+
+    <!--分组选择弹框-->
+    <mu-dialog :open="groupDialog"
+               @close="closeGroup"
+               title="选择分组"
+               dialogClass="result-dialog"
+               bodyClass="result-dialog-body"
+               :scrollable="true">
+      <mu-menu>
+        <mu-menu-item v-for="(item,index) in groupList"
+                      :title="item.new_name"
+                      :key="index"
+                      :disableFocusRipple="true"
+                      @click="selectGroup(item)">
+
+        </mu-menu-item>
+      </mu-menu>
+      <mu-flat-button default label="关闭" @click="closeGroup" slot="actions"></mu-flat-button>
     </mu-dialog>
   </div>
 </template>
@@ -171,9 +188,13 @@
   import {mapState, mapGetters, mapMutations} from 'vuex'
   import bskey from '../../common/js/BSKEY'
   import MuListItem from "../../../node_modules/muse-ui/src/list/listItem.vue";
+  import MuMenuItem from "../../../node_modules/muse-ui/src/menu/menuItem.vue";
 
   export default {
-    components: {MuListItem},
+    components: {
+      MuMenuItem,
+      MuListItem
+    },
     name: 'details',
     data() {
       return {
@@ -182,7 +203,8 @@
         isEdit: false,
         BSKEY: bskey,
         dialog: false,
-        saving: false
+        saving: false,
+        groupDialog: false
       }
     },
     watch: {
@@ -191,8 +213,8 @@
       }
     },
     computed: {
-      ...mapState(['activeId', 'scanResult', 'isAjax']),
-      ...mapGetters(['getDetailsTitle'])
+      ...mapState(['activeId', 'scanResult', 'isAjax', 'groupList']),
+      ...mapGetters(['getDetailsTitle', 'getCardDetailGroupName'])
     },
     methods: {
       editInfo() {
@@ -208,26 +230,43 @@
           }
         })
 
+        if (this.scanResult._new_group_value == null) {
+          hasEmpty = true
+        }
+
         if (!hasEmpty) {
           this.dialog = true
         } else {
           this.$store.commit('showToast', {msg: '请将信息补充完整'})
         }
 
-        console.log('scanResult', this.getDetailsTitle)
+        console.log('getDetailsTitle', this.getDetailsTitle)
       },
       cancelInfo() {
-//        this.isEdit = false
         window.location.reload()
       },
       save() {
         this.dialog = false
         this.saving = true
-        this.$store.dispatch('updateCardDetails', {id: this.$route.query.id, details: this.getDetailsTitle})
+        this.$store.dispatch('updateCardDetails', {
+          id: this.$route.query.id,
+          details: this.getDetailsTitle,
+          groupid: this.scanResult._new_group_value
+        })
         console.log(this.$store.state.scanResult);
       },
       closeDialog() {
         this.dialog = false
+      },
+      selectGroup(item) {
+        this.$store.state.scanResult._new_group_value = item.new_groupid
+        this.groupDialog = false
+      },
+      showGroup() {
+        this.groupDialog = true
+      },
+      closeGroup() {
+        this.groupDialog = false
       },
       businessData(comp) {
         if (!this.isEdit) {

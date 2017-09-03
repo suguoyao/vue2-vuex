@@ -41,6 +41,29 @@ const actions = {
 
     commit('getGroups', {groups})
   },
+  // 搜索名片
+  searchCards: async ({commit}, {keyword}) => {
+    let results = [];
+    await client.contains("new_card", {
+      new_name: keyword,
+      new_comp: keyword,
+      new_mobile: keyword,
+      new_tel: keyword,
+      new_email: keyword,
+      new_dept: keyword,
+      new_addr: keyword,
+      new_web: keyword,
+      new_fax: keyword,
+      new_post: keyword
+    }, (data) => {
+      console.log("查询名片成功", data);
+      results = data.value;
+    }, (error) => {
+      console.log("查询名片失败", error);
+    });
+
+    commit('getSearchResult', {results})
+  },
   // 识别名片
   getScanResult: async ({dispatch, commit, state}, {file, that}) => {
     let results = {};
@@ -132,21 +155,41 @@ const actions = {
 
   },
   // 更新名片详情信息
-  updateCardDetails: async ({commit}, {id, details}) => {
-    client.update("new_card", id, details, (data) => {
+  updateCardDetails: async ({commit}, {id, details, groupid}) => {
+    // details._new_group_value = groupid
+    let newDetails = {}
+
+    Object.keys(details).forEach(key => {
+      newDetails[key] = details[key]
+    })
+    // newDetails._new_group_value = groupid
+    // newDetails.new_group = groupid
+    newDetails['new_group@odata.bind'] = "/new_groups(" + groupid + ")"
+
+    await client.update("new_card", id, newDetails, (data) => {
       console.log("更新成功", data);
       commit('getCardScanResult', {results: details})
       commit('showToast', {msg: '更新成功'})
-      window.location.reload()
-
     }, (error) => {
       console.log("更新失败", error);
       commit('showToast', {msg: '更新失败，请重试'})
     });
+    delete details._new_group_value
+
+    setTimeout(function () {
+      window.location.reload()
+    }, 1000);
   },
   //将名片识别结果存储到CRM系统中
-  saveCardResult: async ({commit}, {cardResult}) => {
+  saveCardResult: async ({commit}, {cardResult, groupid}) => {
     // commit('getCardScanResult', {results: cardResult})
+    let newDetails = {}
+
+    Object.keys(cardResult).forEach(key => {
+      newDetails[key] = cardResult[key]
+    })
+    newDetails['new_group@odata.bind'] = "/new_groups(" + groupid + ")"
+
     await client.apexrest("new_cards", (data) => {
       console.log("名片存储成功", data);
 
@@ -156,7 +199,7 @@ const actions = {
     }, (error) => {
       console.log("名片存储失败", error);
       commit('showToast', {msg: '保存失败，请重试'})
-    }, "POST", cardResult, null, true)
+    }, "POST", newDetails, null, true)
   },
   // 搜索名片
   searchCard: async ({commit}, {keyword}) => {
@@ -169,7 +212,7 @@ const actions = {
   },
   // 查看名片详情
   getCardDetails: async ({commit}, {id}) => {
-    let fields = 'new_name,new_mobile,new_tel,new_post,new_web,new_fax,new_email,new_dept,new_comp,new_addr,new_title'
+    let fields = '_new_group_value,new_name,new_mobile,new_tel,new_post,new_web,new_fax,new_email,new_dept,new_comp,new_addr,new_title'
     let details = {}
 
     await client.retrieve("new_card", id, fields, (data) => {

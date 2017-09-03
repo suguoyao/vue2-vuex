@@ -25,7 +25,9 @@
 
       </mu-appbar>
     </div>
-    <mu-linear-progress color="blue" v-show="isScan"></mu-linear-progress>
+    <div style="position:fixed;top:56px;left:0;width:100%;z-index:999;">
+      <mu-linear-progress color="blue" v-show="isScan" :size="15"></mu-linear-progress>
+    </div>
 
     <!--<mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh()"/>-->
     <div class="home-loading" v-if="isAjax">
@@ -302,6 +304,10 @@
       ...mapState(['isAjax', 'isScan', 'businessCardList', 'groupList', 'currGroup'])
     },
     created() {
+      this.$store.state.isAjax = true
+      this.$store.dispatch('getSFBusinessCard')
+    },
+    updated() {
     },
     methods: {
       ...mapMutations(['showSearch']),

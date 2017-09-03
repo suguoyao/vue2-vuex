@@ -23,7 +23,7 @@
 
     <mu-list v-if="!isAjax">
       <mu-sub-header>{{searchInfo}}</mu-sub-header>
-      <div v-for="(item,index) in getCardBySearch">
+      <div v-for="(item,index) in searchResult">
         <business-card :key="index" :item="item">
         </business-card>
       </div>
@@ -63,7 +63,7 @@
       businessCard
     },
     computed: {
-      ...mapState(['businessCardList', 'isAjax']),
+      ...mapState(['businessCardList', 'isAjax', 'searchResult']),
       ...mapGetters(['getCardBySearch'])
     },
     methods: {
@@ -75,8 +75,11 @@
       search() {
         let kw = this.keyword
         if (kw.length > 0) {
-          this.$store.commit('getSearchKeyword', {keyword: kw})
-          this.searchInfo = '共找到' + this.getCardBySearch.length + '条记录'
+
+          this.$store.state.isAjax = true
+          this.$store.dispatch('searchCards', {keyword: kw})
+//          this.$store.commit('getSearchKeyword', {keyword: kw})
+//          this.searchInfo = '共找到' + this.$store.state.searchResult.length + '条记录'
         }
       },
       closeDel() {
@@ -88,7 +91,8 @@
       },
       del() {
         console.log(this.cId);
-        this.$store.commit('delCardItem', {id: this.cId})
+        this.$store.state.isAjax = true
+        this.$store.dispatch('delCard', {id: this.cId})
         this.delDialog = false
       },
     }

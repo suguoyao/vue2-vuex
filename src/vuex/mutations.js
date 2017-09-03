@@ -17,6 +17,10 @@ const mutations = {
   getSearchKeyword: (state, {keyword}) => {
     state.searchKeyword = keyword
   },
+  getSearchResult: (state, {results}) => {
+    state.searchResult = results
+    state.isAjax = false
+  },
   // 获取名片详情信息
   getCardDetails: (state, {details}) => {
     state.cardDetails = details;

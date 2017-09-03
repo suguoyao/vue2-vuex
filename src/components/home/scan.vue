@@ -54,15 +54,15 @@
 //            let img = new Image();
 //            img.src = result;
 
-            //判断图片是否小于100K,是就直接上传，反之压缩图片
-            if (this.result.length <= (100 * 1024)) {
+            //判断图片是否小于500K,是就直接上传，反之压缩图片
+            if (this.result.length <= (500 * 1024)) {
               //console.log('data1', this.result);
 //              self.scanCard(file)
               self.$store.dispatch('getScanResult', {file: file, that: this})
             } else {
 //              img.onload = function () {
 //                let data = self.compress(img, Orientation);
-                //console.log('data2', data);
+              //console.log('data2', data);
 //                self.scanCard(file)
 //              }
               self.$store.dispatch('getScanResult', {file: file, that: this})

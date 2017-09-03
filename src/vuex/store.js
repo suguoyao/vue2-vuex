@@ -24,6 +24,7 @@ let state = {
   // 搜索
   search: false,
   searchKeyword: '',
+  searchResult:[],
   // 是否正在识别名片
   isScan: false,
   // 详情页
@@ -31,7 +32,7 @@ let state = {
   // 导航栏标题
   headerTitle: "查看分组",
   // ajax请求数据是否结束
-  isAjax: true,
+  isAjax: false,
   // 当前被选中或者在查看中的名片
   activeId: 0,
   // 名片列表
