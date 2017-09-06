@@ -25,9 +25,9 @@ import VueLazyload from 'vue-lazyload'
 
 Vue.use(VueLazyload, {
   preLoad: 1.3,
-  error: 'static/images/lazy.jpg',
-  loading: 'static/images/lazy.jpg',
-  attempt: 1,
+  error: './static/images/lazy.jpg',
+  loading: './static/images/lazy.jpg',
+  attempt: 2,
   listenEvents: ['scroll']
 })
 
@@ -65,7 +65,6 @@ new Vue({
   components: {App},
   // 组件创建前，请求用户数据
   beforeCreate() {
-
   }
 })
 

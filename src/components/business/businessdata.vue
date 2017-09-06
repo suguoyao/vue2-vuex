@@ -89,8 +89,8 @@
       ...mapGetters(['getBSTitle'])
     },
     created() {
-//      this.$store.state.isAjax = true
-//      this.$store.dispatch('getBusinessDataByCRM', this.$route.query)
+      this.$store.state.isAjax = true
+      this.$store.dispatch('getBusinessDataByCRM', this.$route.query)
     },
     methods: {
       backDetails() {

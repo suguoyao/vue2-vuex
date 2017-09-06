@@ -186,8 +186,15 @@
       }
     },
     created() {
+      let sr = JSON.parse(localStorage.getItem('scanResult'))
+
       this.currSelGroup = this.$store.state.currGroup === "全部" ? '未分组' : this.$store.state.currGroup
       this.currSelGroupId = this.$store.state.currGroupId
+
+      if (sr) {
+        this.$store.dispatch('getGroupList')
+        this.$store.commit('getCardScanResult', {results: sr})
+      }
     },
     watch: {
       details(oldVal, newVal) {
@@ -222,6 +229,7 @@
           this.$store.commit('showToast', {msg: '请将信息补充完整'})
         }
 
+        console.log('currSelGroupId', this.currSelGroupId)
         console.log('result', this.scanResult)
       },
       cancelSave() {
@@ -242,6 +250,7 @@
       },
       selectGroup(item) {
         this.currSelGroup = item.new_name
+        this.currSelGroupId = item.new_groupid
         this.$store.state.scanResult._new_group_value = item.new_groupid
         this.groupDialog = false
       },

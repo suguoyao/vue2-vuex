@@ -28,6 +28,7 @@ const mutations = {
   },
   // 获取名片识别结果
   getCardScanResult: (state, {results}) => {
+    localStorage.setItem('scanResult', JSON.stringify(results))
     state.scanResult = results;
     state.isAjax = false
   },

@@ -6,11 +6,11 @@
         <mu-icon slot="after" value="keyboard_arrow_right"/>
       </mu-list-item>
       <mu-divider inset/>
-      <mu-list-item title="我的收藏">
-        <mu-icon slot="left" value="star"/>
-        <mu-icon slot="after" value="keyboard_arrow_right"/>
-      </mu-list-item>
-      <mu-divider inset/>
+      <!--<mu-list-item title="我的收藏">-->
+        <!--<mu-icon slot="left" value="star"/>-->
+        <!--<mu-icon slot="after" value="keyboard_arrow_right"/>-->
+      <!--</mu-list-item>-->
+      <!--<mu-divider inset/>-->
       <mu-list-item title="个人资料">
         <mu-icon slot="left" value="assignment_ind"/>
         <mu-icon slot="after" value="keyboard_arrow_right"/>

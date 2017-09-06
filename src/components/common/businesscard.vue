@@ -5,7 +5,8 @@
                   :disableRipple="true"
                   class="list-item"
                   @click.stop="showDetails(item.new_cardid)">
-      <mu-avatar :src="''" slot="leftAvatar"/>
+      <!--<mu-avatar :src="'./static/images/sugars.jpeg'" slot="leftAvatar"/>-->
+      <img v-lazy="'./static/images/sugars.jpeg'" alt="" slot="leftAvatar" style="width:100%;">
       <span slot="describe">
         <span style="color: rgba(0, 0, 0, .87)">{{item.new_comp}}</span>
         </span>

@@ -27,36 +27,16 @@ var app = express()
 // http请求模块
 const superagent = require('superagent')
 
+
 // 模拟后台假数据
-let appData = require('../mockdata.json')
-let self = appData.self
-let friend = appData.friend
+// let appData = require('../mockdata.json')
+// let self = appData.self
+// let friend = appData.friend
 
 let apiRoutes = express.Router()
 
-apiRoutes.get('/self', (req, res) => {
-  res.json({data: self})
-})
-
 apiRoutes.get('/friends', (req, res) => {
-  res.json({data: friend})
-})
-
-// 测试salesforce接口
-apiRoutes.get('/getBusinessCard', (req, res) => {
-  let response = res;
-  let url = 'https://ap4.salesforce.com/services/data/v37.0/query?q=' + encodeURIComponent('SELECT Id, Name, Mobile__c, Company__c FROM Business_Card__c');
-  let sessionId = '00D6F000001v8ld!ARwAQBpBeIuwsA0MMEpg6dvGOkCioTOoJsJVDAbpHi_U7g5OEu3vNd2qf0EkuWSy6xmQGYJSxw2epX89HDZ10AZRyjtGguqI';
-  superagent.get(url)
-    .set('Authorization', 'Bearer ' + sessionId)
-    .end((err, res) => {
-      if (err) {
-        console.log(err)
-      }
-      response.json({
-        data: res.text
-      })
-    })
+  res.json({data: 'data'})
 })
 
 app.use('/api', apiRoutes)

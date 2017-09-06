@@ -4,7 +4,7 @@
       <div class="gridlist">
         <mu-grid-list class="gridlist-demo">
           <mu-grid-tile titlePosition="bottom" actionPosition="right" :rows="2" :cols="2">
-            <img :src="'./static/images/sugars.jpeg'"/>
+            <img v-lazy="'./static/images/sugars.jpeg'"/>
             <!--<img :src="scanResult.new_title"/>-->
             <span slot="title">当前分组</span>
             <span slot="subTitle"><b>{{getCardDetailGroupName}}</b></span>

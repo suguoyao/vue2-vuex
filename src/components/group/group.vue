@@ -6,7 +6,7 @@
       <div v-for="(item,index) in groupList">
         <mu-divider/>
 
-        <mu-list-item :title="item" class="list-item">
+        <mu-list-item :title="item.new_name" class="list-item">
 
         </mu-list-item>
 
