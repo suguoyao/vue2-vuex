@@ -6,10 +6,12 @@
     </div>
 
     <div v-if="compayBusinessData.length>0" style="text-align:center;">
-      <mu-row :gutter="true">
-        <mu-col v-for="(val,key) in getBSTitle"
-                :key="key" :width="key=='经营(业务)范围'?'100':'50'">
+      <!--<mu-row :gutter="true">-->
+        <!--<mu-col v-for="(val,key) in getBSTitle"-->
+                <!--:key="key" :width="key=='经营(业务)范围'?'100':'50'">-->
           <mu-list-item
+            v-for="(val,key) in getBSTitle"
+            :key="key"
             disableRipple>
             <mu-text-field :label="key" type="text"
                            :value="val"
@@ -23,16 +25,16 @@
                            :underlineShow="true"
                            :disabled="true"></mu-text-field>
           </mu-list-item>
-        </mu-col>
-      </mu-row>
+        <!--</mu-col>-->
+      <!--</mu-row>-->
 
-      <mu-raised-button label="返回" class="demo-raised-button" @click="backDetails"></mu-raised-button>
+      <mu-raised-button label="返回" class="demo-raised-button" primary @click="backDetails"></mu-raised-button>
     </div>
 
     <div class="empty" v-if="compayBusinessData.length==0&&!isAjax">
       <mu-icon value="sentiment_neutral" :size="80"></mu-icon>
       <mu-content-block :style="{'margin-bottom':'20px'}">查无此公司的工商信息</mu-content-block>
-      <mu-raised-button label="返回" class="demo-raised-button" @click="backDetails"></mu-raised-button>
+      <mu-raised-button label="返回" class="demo-raised-button" primary @click="backDetails"></mu-raised-button>
     </div>
   </div>
 </template>
@@ -81,7 +83,7 @@
     name: 'businessData',
     data() {
       return {
-        BSKEY: bskey
+        BSKEY: bskey.bsdata
       }
     },
     computed: {
@@ -89,6 +91,7 @@
       ...mapGetters(['getBSTitle'])
     },
     created() {
+      this.$store.state.compayBusinessData = [];
       this.$store.state.isAjax = true
       this.$store.dispatch('getBusinessDataByCRM', this.$route.query)
     },

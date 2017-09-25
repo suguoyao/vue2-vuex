@@ -4,7 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const museUiThemePath = path.join(
   __dirname,
-  'node_modules',
+  '../node_modules',
   'muse-ui',
   'src/styles/themes/variables/default.less'
 )

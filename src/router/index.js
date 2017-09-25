@@ -14,7 +14,7 @@ import group from '../components/group/group.vue'
 import businessdata from '../components/business/businessdata.vue'
 
 let routes = [
-  {path: '/home', name: 'home', component: home},
+  {path: '/', name: 'home', component: home},
   {path: '/search', name: 'search', component: search},
   {path: '/result', name: 'result', component: result},
   {path: '/details', name: 'details', component: details},
@@ -25,5 +25,6 @@ let routes = [
 
 export default new Router({
   mode: process.env.NODE_ENV === 'development' ? 'history' : 'hash',
+  // mode: 'history',
   routes
 })

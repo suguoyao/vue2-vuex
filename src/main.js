@@ -25,15 +25,15 @@ import VueLazyload from 'vue-lazyload'
 
 Vue.use(VueLazyload, {
   preLoad: 1.3,
-  error: './static/images/lazy.jpg',
-  loading: './static/images/lazy.jpg',
+  error: './static/images/lazy2.png',
+  loading: './static/images/loading.gif',
   attempt: 2,
   listenEvents: ['scroll']
 })
 
 FastClick.attach(document.body)
 
-Vue.prototype.$http = axios
+Vue.prototype.context = context
 
 // router.replace('home')
 
@@ -46,6 +46,9 @@ router.beforeEach((to, from, next) => {
   }
   if (from.name == 'details') {
     store.state.details = false
+  }
+  if (from.name == "business") {
+    store.state.compayBusinessData = []
   }
   if (to.name == 'search') {
     store.state.search = true
@@ -65,6 +68,8 @@ new Vue({
   components: {App},
   // 组件创建前，请求用户数据
   beforeCreate() {
+    this.$store.state.isAjax = true
+    this.$store.dispatch('getUserId')
   }
 })
 

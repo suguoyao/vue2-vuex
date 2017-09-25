@@ -12,6 +12,8 @@ Vue.use(Vuex)
 
 // 初始化一些常用数据，根据vue的理念，使用到的数据都必须先进行初始化设置。
 let state = {
+  // 系统微信用户id
+  userId: 0,
   // toast
   toast: false,
   toastMsg: '',
@@ -24,9 +26,10 @@ let state = {
   // 搜索
   search: false,
   searchKeyword: '',
-  searchResult:[],
+  searchResult: [],
   // 是否正在识别名片
   isScan: false,
+  saving: false,
   // 详情页
   details: false,
   // 导航栏标题
@@ -41,6 +44,7 @@ let state = {
   cardDetails: {},
   // 名片识别结果
   scanResult: {},
+  scanCardImg: '',
   compayBusinessData: [],
   // 名片首字母列表
   // bcFirstNameList: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],

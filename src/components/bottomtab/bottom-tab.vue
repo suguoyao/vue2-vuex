@@ -9,9 +9,9 @@
                         title="名片夹"
                         icon="contacts"/>
 
-    <mu-bottom-nav-item value="discover"
-                        title="我"
-                        icon="person"/>
+    <!--<mu-bottom-nav-item value="discover"-->
+                        <!--title="我"-->
+                        <!--icon="person"/>-->
 
   </mu-bottom-nav>
 </template>

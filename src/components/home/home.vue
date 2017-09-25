@@ -4,19 +4,18 @@
       <mu-appbar :zDepth="0">
         <!--左边头像-->
         <!--<mu-avatar slot="left" :src="avatar" :size="35"/>-->
-        <mu-flat-button slot="left" icon="linked_camera">
-          <scan></scan>
-        </mu-flat-button>
+        <mu-flat-button slot="left" icon="help_outline" @click="showHelp"></mu-flat-button>
         <!--<mu-icon slot="left" value="camera_alt" color="skyblue">-->
         <!--<input type="file">-->
         <!--</mu-icon>-->
 
         <!--标题-->
-        <div slot="default" class="title">
+        <div slot="default" class="group-name">
           <!--<div class="title-item">-->
           <!--{{headerTitle}}-->
           <!--</div>-->
-          <mu-flat-button :label="currGroup" class="demo-flat-button" @click="showGroup"></mu-flat-button>
+          <mu-flat-button :label="currGroup" class="demo-flat-button" @click="showGroup"
+                          style="font-size: 16px"></mu-flat-button>
         </div>
 
 
@@ -25,13 +24,18 @@
 
       </mu-appbar>
     </div>
-    <div style="position:fixed;top:56px;left:0;width:100%;z-index:999;">
-      <mu-linear-progress color="blue" v-show="isScan" :size="15"></mu-linear-progress>
+    <div style="position:fixed;top:56px;left:0;width:100%;height:100%;z-index:999;" v-show="isScan">
+      <!--<mu-linear-progress color="blue" v-show="isScan" :size="15"></mu-linear-progress>-->
+      <div class="scan-mask"></div>
+      <div class="home-loading">
+        <mu-circular-progress :size="40" :color="'white!important'" :strokeWidth="5"></mu-circular-progress>
+      </div>
     </div>
 
     <!--<mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh()"/>-->
+    <div class="loading-mask" v-if="isAjax"></div>
     <div class="home-loading" v-if="isAjax">
-      <mu-circular-progress :size="40" :color="'474a4f'" :strokeWidth="5"></mu-circular-progress>
+      <mu-circular-progress :size="40" :color="'white!important'" :strokeWidth="5"></mu-circular-progress>
     </div>
 
     <div>
@@ -82,6 +86,24 @@
     </mu-dialog>
 
 
+    <mu-dialog :open="firstOpen" title="温馨提示" @close="closeDel">
+      拍摄时将名片占满屏幕并且不留空隙能提高识别率哦~
+      <mu-flat-button slot="actions" primary @click="userOk" label="我知道了"/>
+    </mu-dialog>
+
+    <mu-dialog :open="heloDialog" title="如何提高识别率" @close="closeHelp">
+      <p>正确的拍摄方式能够大大的提高识别准确率哦~</p>
+      <div class="help-info">
+        <img src="static/images/ex1.jpg" alt="">
+        <img src="static/images/ex2.jpg" alt="">
+      </div>
+      <p class="help-desc">
+        <span>识别率高</span>
+        <span>识别率低</span>
+      </p>
+      <mu-flat-button slot="actions" primary @click="closeHelp" label="我知道了"/>
+    </mu-dialog>
+
     <mu-dialog :open="groupDialog"
                @close="closeGroup"
                title="选择分组"
@@ -100,9 +122,66 @@
       </mu-menu>
       <mu-flat-button default label="关闭" @click="closeGroup" slot="actions"></mu-flat-button>
     </mu-dialog>
+
+    <div class="container-bottom">
+      <mu-bottom-nav
+        shift
+        class="bottom-tab">
+        <!--<mu-flat-button slot="default" icon="linked_camera" style="color: #fff">-->
+        <!--<scan></scan>-->
+        <!--</mu-flat-button>-->
+        <mu-content-block slot="default">
+          <mu-icon value="linked_camera" :size="50"></mu-icon>
+          <scan></scan>
+
+        </mu-content-block>
+
+      </mu-bottom-nav>
+    </div>
   </div>
 </template>
 <style lang="scss">
+  .help-info {
+    overflow: hidden;
+    img {
+      width: 50%;
+      float: left;
+    }
+  }
+
+  .help-desc {
+    overflow: hidden;
+    margin: 5px 0 0 0;
+    span {
+      display: block;
+      float: left;
+      width: 50%;
+      text-align: center;
+    }
+  }
+
+  .scan-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+  }
+
+  .sort-item .mu-sub-header {
+    line-height: 22px;
+    height: 22px;
+  }
+
+  .mu-list .mu-sub-header:first-child {
+    margin-top: 0 !important;
+  }
+
+  .cicon {
+  }
+
   .result-dialog-body {
     max-height: 279px !important;
     padding: 0 !important;
@@ -244,7 +323,7 @@
     margin-top: 40%;
   }
 
-  .title {
+  .group-name {
     /*padding-right: 12px;*/
     text-align: center;
     .title-item {
@@ -258,6 +337,9 @@
       font-weight: 500;
       /*background: #fff;*/
       color: #fff;
+    }
+    .mu-flat-button-label {
+      font-size: 18px !important;
     }
   }
 
@@ -288,6 +370,8 @@
         delDialog: false,
         groupDialog: false,
         refreshing: false,
+        firstOpen: false,
+        heloDialog: false,
         trigger: null,
         barHeight: document.documentElement.clientHeight - 112,
         sections: [],
@@ -304,8 +388,13 @@
       ...mapState(['isAjax', 'isScan', 'businessCardList', 'groupList', 'currGroup'])
     },
     created() {
-      this.$store.state.isAjax = true
-      this.$store.dispatch('getSFBusinessCard')
+      if (this.$store.state.userId !== 0) {
+        this.$store.state.isAjax = true
+        this.$store.dispatch('getUserId')
+      }
+      if (!window.localStorage.getItem("firstOpen")) {
+        this.firstOpen = true;
+      }
     },
     updated() {
     },
@@ -316,6 +405,10 @@
         setTimeout(() => {
           this.refreshing = false
         }, 2000)
+      },
+      userOk() {
+        window.localStorage.setItem("firstOpen", 1)
+        this.firstOpen = false;
       },
       handleChange(value) {
         this.group = value
@@ -406,6 +499,12 @@
       },
       goTop() {
         window.scrollTo(0, document.body.offsetTop)
+      },
+      showHelp() {
+        this.heloDialog = true
+      },
+      closeHelp() {
+        this.heloDialog = false
       }
     },
     mounted() {

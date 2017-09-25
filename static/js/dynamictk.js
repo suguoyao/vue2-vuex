@@ -114,8 +114,8 @@ if (dynamictk.Client === undefined) {
     var that = this,
       //todo:版本号不使用固定编码,待修改为apiVersion
       url = this.instanceUrl + '/api/data/v8.2/' + path;
-    // url = 'https://msdev.veevlink.com/api/data/v8.2/' + path;
-    console.log("Request URL:" + url);
+    // url = 'https://msdemo.veevlink.com/api/data/v8.2/' + path;
+    // console.log("Request URL:" + url);
     return $.ajax({
       type: method || "GET",
       async: this.asyncAjax,
@@ -399,10 +399,11 @@ if (dynamictk.Client === undefined) {
     if (logicArray != null) {
       $.each(logicArray, function (index) {
         //var pa = logicArray[index].split(/\s+/g);
-        if (index != 0)
+        if (index != 0) {
           resultFilter += ' and ';
+        }
         var pa = logicArray[index].replace(/\s/gi, "");
-        var r = new RegExp("(\\w+)(=|>=|<=|>|<|!=|<>)(('(.*)'|\"(.*)\"))", "i");
+        var r = new RegExp("(\\w+)(=|>=|<=|>|<|!=|<>)(((.*)|\"(.*)\"))", "i");
         var args = pa.match(r);
         switch (args[2]) {
           case '=':
@@ -429,6 +430,7 @@ if (dynamictk.Client === undefined) {
         }
         resultFilter += args[1] + args[2] + args[3];
 
+
       });
     }
     //assemble the result url
@@ -436,21 +438,48 @@ if (dynamictk.Client === undefined) {
     if (resultFilter != '') {
       resultUrl += "&$filter=" + resultFilter;
     }
-    console.log("resultUrl===" + resultUrl);
+    // console.log("resultUrl===" + resultUrl);
     return this.ajax(resultUrl, callback, error, "GET");
   };
 
-  dynamictk.Client.prototype.contains = function (objtype, fields, callback, error) {
+  dynamictk.Client.prototype.contains = function (objtype, fields, condition, callback, error) {
     'use strict';
     var url = objtype + 's?$filter=';
     var fieldCount = 0;
-    for (var key in fields) {
-      if (fieldCount == 0) {
-        url += "contains(" + key + ",'" + fields[key] + "')"
-      } else {
-        url += " or contains(" + key + ",'" + fields[key] + "')"
+
+    if (condition == null || typeof condition !== "object" || condition == '') {
+      for (var key in fields) {
+        if (fieldCount == 0) {
+          url += "contains(" + key + ",'" + fields[key] + "')"
+        } else {
+          url += " or contains(" + key + ",'" + fields[key] + "')"
+        }
+        fieldCount++
       }
-      fieldCount++
+    } else {
+      var cKeyLen = Object.keys(condition).length;
+
+      for (var key in fields) {
+        var ckLen = 0;
+
+        if (fieldCount == 0) {
+          url += "(contains(" + key + ",'" + fields[key] + "')"
+        } else {
+          url += " or (contains(" + key + ",'" + fields[key] + "')"
+        }
+        fieldCount++
+
+        for (var ck in condition) {
+          if (ckLen + 1 !== cKeyLen) {
+            url += " and " + ck + " eq " + condition[ck];
+          } else {
+            url += " and " + ck + " eq " + condition[ck] + ")";
+          }
+          ckLen++;
+        }
+      }
+
+
     }
 
     return this.ajax(url, callback, error, "GET");

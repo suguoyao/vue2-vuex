@@ -3,6 +3,10 @@
  */
 
 const mutations = {
+  // 设置微信用户Id
+  setUserId: (state, {userid}) => {
+    state.userId = userid
+  },
   // 页面标题变更
   changeTitle: (state, {title}) => {
     state.headerTitle = title
@@ -23,7 +27,7 @@ const mutations = {
   },
   // 获取名片详情信息
   getCardDetails: (state, {details}) => {
-    state.cardDetails = details;
+    state.cardDetails = details
     state.isAjax = false
   },
   // 获取名片识别结果
@@ -31,6 +35,10 @@ const mutations = {
     localStorage.setItem('scanResult', JSON.stringify(results))
     state.scanResult = results;
     state.isAjax = false
+  },
+  // 显示识别的名片照片
+  setScanCardImg: (state, {url}) => {
+    state.scanCardImg = url
   },
   //
   updateScanResult: (state, key) => {
@@ -82,8 +90,12 @@ const mutations = {
     state.isAjax = false
   },
   // 获取api中工商数据
-  getApiBsData: (state, {bsData}) => {
-    state.compayBusinessData.push(bsData)
+  getApiBsData: (state, bsData) => {
+    if (bsData) {
+      state.compayBusinessData.push(bsData)
+    } else {
+      state.compayBusinessData = []
+    }
     state.isAjax = false
   },
   // common

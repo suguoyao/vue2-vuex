@@ -8,7 +8,7 @@
 
       <mu-text-field class="appbar-search-field"
                      slot="default"
-                     hintText="搜索"
+                     hintText="输入关键词搜索相关名片"
                      v-model="keyword"
                      :underlineFocusClass="'search-underline'"
                      :inputClass="'search-input'"/>
@@ -22,7 +22,7 @@
     </div>
 
     <mu-list v-if="!isAjax">
-      <mu-sub-header>{{searchInfo}}</mu-sub-header>
+      <mu-sub-header>{{searchResult.length > 0 ? '共找到' + searchResult.length + '条记录' : searchInfo}}</mu-sub-header>
       <div v-for="(item,index) in searchResult">
         <business-card :key="index" :item="item">
         </business-card>
@@ -53,7 +53,7 @@
   export default {
     data() {
       return {
-        searchInfo: '在输入框中，输入关键词搜索相关名片',
+        searchInfo: '',
         keyword: '',
         results: [],
         delDialog: false
@@ -70,7 +70,7 @@
       ...mapMutations(['showSearch']),
       backHome() {
         this.showSearch()
-        this.$router.push('home')
+        this.$router.push('/')
       },
       search() {
         let kw = this.keyword
@@ -79,7 +79,9 @@
           this.$store.state.isAjax = true
           this.$store.dispatch('searchCards', {keyword: kw})
 //          this.$store.commit('getSearchKeyword', {keyword: kw})
-//          this.searchInfo = '共找到' + this.$store.state.searchResult.length + '条记录'
+          if (this.$store.state.searchResult.length == 0) {
+            this.searchInfo = '查无相关名片记录'
+          }
         }
       },
       closeDel() {

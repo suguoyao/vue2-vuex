@@ -158,7 +158,7 @@ const getters = {
     let glist = state.groupList
     let gname = ''
 
-    console.log('getters', details);
+    // console.log('getters', details);
     if (details._new_group_value == null || details._new_group_value == 'undefined') {
       return '未分组'
     }
@@ -178,8 +178,8 @@ const getters = {
       oldBsData = state.compayBusinessData[0];
 
     Object.keys(oldBsData).forEach(key => {
-      if (bskey[key]) {
-        newBsData[bskey[key]] = oldBsData[key]
+      if (bskey.bsdata[key] && oldBsData[key] !== null) {
+        newBsData[bskey.bsdata[key]] = oldBsData[key]
       }
     })
 

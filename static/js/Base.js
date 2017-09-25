@@ -1,9 +1,9 @@
 //全局变量context
 var context = {
   OpenId: "",
-  WechatUserId:"",
+  WechatUserId: "",
   WEQYUserId: "",
-  AppId:"wxcbf80010bbc52ecd"
+  AppId: "wxcbf80010bbc52ecd"
 };
 //本地Session存储
 /*重要提示： 1. 每次用户点击菜单访问页面时，都需要识别用户身份，
@@ -38,6 +38,7 @@ function getQueryString(str) {
   }
   return null;
 }
+
 /*封装获取Context的方法，供外部调用，
  判断是否有Code，如果有Code需要调用Base.js获取，
  如果没有判断Cookie是否存在，如果存在返回Cookie中的值，
@@ -50,14 +51,14 @@ function GetContext() {
   //var AppId = getQueryString("appid");
   var AgentId = getQueryString("agentid");
   //全局控制是否是测试环境
-  //var IsTest = getQueryString("test");
+  var IsTest = getQueryString("test") === "1";
   IsTest = true;
 
   /**********************以下代码部署到微信环境可以删除******************************/
   if (IsTest) {
     context.AppId = "wxcbf80010bbc52ecd";
     context.SessionId = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InZlYlVRb3NwZkxLbEpaTHl3ZkVkQV9ZYU1ybyJ9.eyJhdWQiOiJodHRwczovL21zZGVtby52ZWV2bGluay5jb20vIiwiaXNzIjoiaHR0cDovL3N0cy52ZWV2bGluay5jb20vYWRmcy9zZXJ2aWNlcy90cnVzdCIsImlhdCI6MTUwMTIyMjk2MSwiZXhwIjoxNTMyNzIyOTYxLCJ1cG4iOiJidWJiYS5saUB2ZWV2bGluay5jb20iLCJwcmltYXJ5c2lkIjoiUy0xLTUtMjEtMzMzOTY3Mzg0MC0zNTk1ODQzMDU1LTIwMjk5ODExMTMtMTEyNyIsInVuaXF1ZV9uYW1lIjoiVkVFVkxJTktcXGJ1YmJhLmxpIiwiYXV0aF90aW1lIjoiMjAxNy0wNy0yOFQwNjoyMjo0MC45MjBaIiwiYXV0aG1ldGhvZCI6InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphYzpjbGFzc2VzOlBhc3N3b3JkUHJvdGVjdGVkVHJhbnNwb3J0IiwidmVyIjoiMS4wIiwiYXBwaWQiOiI0QkQwRDNDMi05N0RGLTQwOEItQTZENC1BOEZDRjg0MDMwQzMifQ.TVHPfokM1zFnCueAeKYeMIm9bqHgqYbpm8B8_S71-TDQkCYmmAc4LkveWFQXrNwbRUFl7WzBsh0vhCRF7tiwRBxVi9UeLCqPYk_LfC6Ay4gDATAe971suIoYmCO5lOuWi3i36NCy7OMJ9wHXF2a3fSXCpWZE0GK3qelwxROw4KJIXyqhHx95pZo9U_VlPiP818wvAb05HLhfkaE18BiLJLPg8hbkg1zwXnH38nTq9Nrwkm5fx3hnTaAWlntH_2bhtdK1AV1FyjMWiCrwi0FY_o67_y1AIfsjzLDjOxBiyLBgdfKABgXCelyOYH1YER3QMP22TL5pquDKpLsurKksXQ";
-    context.OpenId = "9987b011-217b-e711-81ca-0248aae46430";
+    context.OpenId = "oztIn1Y7trXYiiEdYmPxxr_xc4so";
     context.ApiVersion = "v37.0";
     context.InstanceUrl = "https://msdemo.veevlink.com";
     context.RefreshTokenProxyUrl = "https://dev.veevlink.com/Proxy/SFDCAccessTokenProxy.aspx";
@@ -152,7 +153,7 @@ function GetContext() {
       type: "GET",
       dataType: "json",
       success: function (res) {
-        console.log('----------'+res);
+        console.log('----------' + res);
         //请求成功后，将返回的json字符串，转换成context对象
         if (res !== null && res !== "") {
           //context = JSON.parse(res);
@@ -223,6 +224,7 @@ function GetContextFromStorage() {
     });
   }
 }
+
 //跳转微信OAuth方法
 function WechatOAuth(AppId, AgentId) {
   //var url = window.location.protocol + "//" + window.location.host;

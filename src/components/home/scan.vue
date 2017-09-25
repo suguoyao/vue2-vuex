@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input type="file" class="camera" @change="uploader">
+    <input type="file" class="camera" accept="image/*" @change="uploader">
   </div>
 </template>
 <style scoped>
@@ -23,9 +23,14 @@
     data() {
       return {}
     },
+    created() {
+    },
     methods: {
 //      ...mapActions(['getScanResult']),
       uploader(e) {
+        // 显示识别中的loading
+        this.$store.state.isScan = true;
+
         let files = e.target.files || e.dataTransfer.files;
         if (!files.length) return;
         this.picValue = files[0];
@@ -34,37 +39,92 @@
       imgPreview(file) {
 //        this.scanCard(file)
         let self = this;
-        /*let Orientation;
-        //去获取拍照时的信息，解决拍出来的照片旋转问题
-        Exif.getData(file, function () {
-          Orientation = Exif.getTag(this, 'Orientation');
-        });*/
+        let Orientation;
+
 
         // 看支持不支持FileReader
         if (!file || !window.FileReader) return;
 
+        //去获取拍照时的信息，解决拍出来的照片旋转问题
+        Exif.getData(file, function () {
+          Orientation = Exif.getTag(this, 'Orientation');
+        });
+
+
+//        console.log(file);
         if (/^image/.test(file.type)) {
+
           // 创建一个reader
           let reader = new FileReader();
           // 将图片2将转成 base64 格式
-//          reader.readAsDataURL(file);
+          reader.readAsDataURL(file);
           // 读取成功后的回调
           reader.onload = function () {
-//            let result = this.result;
-//            let img = new Image();
-//            img.src = result;
+            let result = this.result;
+            let img = new Image();
+            img.src = result;
 
             //判断图片是否小于500K,是就直接上传，反之压缩图片
             if (this.result.length <= (500 * 1024)) {
               //console.log('data1', this.result);
-
-//              self.$store.dispatch('getScanResult', {file: file, that: this})
+              self.$store.dispatch('getScanResult', {file: file, url: this.result})
             } else {
-
-//              self.$store.dispatch('getScanResult', {file: file, that: this})
+              img.onload = function () {
+                let data = self.compress(img, Orientation);
+                //console.log('data2', data);scanCardImg
+                self.$store.dispatch('getScanResult', {file: file, url: data})
+              }
             }
           }
-          self.$store.dispatch('getScanResult', {file: file, that: this})
+        }
+      },
+      rotateImg(img, direction, canvas) {
+        //最小与最大旋转方向，图片旋转4次后回到原方向
+        const min_step = 0;
+        const max_step = 3;
+        if (img == null) return;
+        //img的高度和宽度不能在img元素隐藏后获取，否则会出错
+        let height = img.height;
+        let width = img.width;
+        let step = 2;
+        if (step == null) {
+          step = min_step;
+        }
+        if (direction == 'right') {
+          step++;
+          //旋转到原位置，即超过最大值
+          step > max_step && (step = min_step);
+        } else {
+          step--;
+          step < min_step && (step = max_step);
+        }
+        //旋转角度以弧度值为参数
+        let degree = step * 90 * Math.PI / 180;
+        let ctx = canvas.getContext('2d');
+        switch (step) {
+          case 0:
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0);
+            break;
+          case 1:
+            canvas.width = height;
+            canvas.height = width;
+            ctx.rotate(degree);
+            ctx.drawImage(img, 0, -height);
+            break;
+          case 2:
+            canvas.width = width;
+            canvas.height = height;
+            ctx.rotate(degree);
+            ctx.drawImage(img, -width, -height);
+            break;
+          case 3:
+            canvas.width = height;
+            canvas.height = width;
+            ctx.rotate(degree);
+            ctx.drawImage(img, -width, 0);
+            break;
         }
       },
       compress(img, Orientation) {
